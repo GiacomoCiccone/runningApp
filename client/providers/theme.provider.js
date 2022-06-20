@@ -2,6 +2,7 @@ import * as React from "react";
 import { LightTheme, DarkTheme } from "../common/theme";
 import { useColorScheme } from 'react-native';
 import * as Font from 'expo-font';
+import * as NavigationBar from 'expo-navigation-bar';
 
 //create the context
 export const ThemeContext = React.createContext();
@@ -33,7 +34,13 @@ export const ThemeProvider = ({ children }) => {
     // Changing theme
     React.useEffect(() => {
         setTheme(colorScheme === 'light' ? LightTheme : DarkTheme)
+        
     }, [colorScheme]);
+
+    React.useEffect(() => {
+        NavigationBar.setBackgroundColorAsync(theme.colors.background);
+        NavigationBar.setButtonStyleAsync(colorScheme === 'light' ? 'dark' : 'light');
+    }, [theme])
     
     return (
         <ThemeContext.Provider value={theme}>

@@ -884,9 +884,9 @@ export const DarkTheme = {
     colors: {
         ...PaperDarkTheme.colors,
         ...commonTheme.colors,
-        background: "#041220",
-        backgroundElevation: "#162431",
-        surface: "#041220",
+        background: "#151c23",
+        backgroundElevation: "#16232f",
+        surface: "#151c23",
         text: "#FAFBFF",
         grey: commonTheme.colors["grey-400"],
     },

@@ -72,7 +72,7 @@ UserSchema.methods.getSignedToken = function () {
 };
 
 UserSchema.methods.getResetPasswordToken = function () {
-    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetToken = crypto.randomInt(0, 9999).toString().padStart(4, "0")
 
     //setta il campo resetPasswordToken di questo utente
     this.resetPasswordToken = crypto

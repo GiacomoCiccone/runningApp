@@ -25,6 +25,8 @@ app.use("/api/users", require("./routers/users"));
 //L'errorHandler deve essere l'ultimo middleware
 app.use(errorHandler);
 
+
+
 //se e' definita nel config file prendiamo quella porta altrimenti la 8000
 const PORT = process.env.PORT || 8000;
 
@@ -34,7 +36,6 @@ const server = app.listen(PORT, () => {
         .map((x) => [x, ifs[x].filter((x) => x.family === "IPv4")[0]])
         .filter((x) => x[1])
         .map((x) => x[1].address);
-    console.log(result);
     console.log(`Server running ${PORT}`);
     console.log(`Try one of these addresses: ${result.join(", ")}`);
 });

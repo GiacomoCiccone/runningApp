@@ -72,7 +72,7 @@ export const forgotPasswordAction = (email, onSuccess) => async (dispatch) => {
             payload: {},
         });
 
-        onSuccess();
+        onSuccess(email);
     } catch (error) {
         dispatch({
             type: FORGOT_PASSWORD_FAIL,

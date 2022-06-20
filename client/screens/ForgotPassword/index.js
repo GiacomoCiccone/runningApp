@@ -16,12 +16,15 @@ import ControlledTextInput from "../../components/ControlledTextInput";
 import SnackBar from "../../components/SnackBar";
 import { forgotPasswordAction } from "../../actions/userActions";
 import { RESET_ERROR_USER } from "../../actions";
+import AppHeader from "../../components/AppHeader";
 
 const ForgotPasswordScreen = ({navigation}) => {
     const theme = useTheme();
 
-    const user = useSelector((state) => state.user);
+    const userError = useSelector((state) => state.user.error);
+    const userIsLoading = useSelector((state) => state.user.isLoading)
     const dispatch = useDispatch();
+    
 
     const {
         handleSubmit,
@@ -34,18 +37,20 @@ const ForgotPasswordScreen = ({navigation}) => {
     });
 
     const [showModal, setShowModal] = React.useState(false);
+    const [email, setEmail] = React.useState(undefined)
 
     const resetError = React.useCallback(() => {
         dispatch({ type: RESET_ERROR_USER });
     }, []);
 
-    const onSuccess = React.useCallback(() => {
+    const onSuccess = React.useCallback((email) => {
         setShowModal(true)
+        setEmail(email)
     }, [])
 
     const closeModal = React.useCallback(() => {
         setShowModal(false)
-        navigation.replace('ResetPassword')
+        navigation.navigate('ResetPassword')
     }, [])
 
 
@@ -56,11 +61,14 @@ const ForgotPasswordScreen = ({navigation}) => {
 
     return (
         <RN.SafeAreaView style={styles.safeContainer}>
-            {user.isLoading && (
+            {userIsLoading && (
                 <Paper.ProgressBar indeterminate style={styles.progressBar} />
             )}
+
+            <AppHeader />
+
             <SnackBar
-                visible={user.error}
+                visible={userError}
                 onDismiss={resetError}
                 action={{
                     label: "ok",
@@ -68,7 +76,7 @@ const ForgotPasswordScreen = ({navigation}) => {
                 }}
                 type="error"
             >
-                {user.error}
+                {userError}
             </SnackBar>
 
             <RN.View style={styles.logoContainer}>
@@ -123,7 +131,7 @@ const ForgotPasswordScreen = ({navigation}) => {
 
                 <ButtonSubmit
                     label="Invia"
-                    loading={user.isLoading}
+                    loading={userIsLoading}
                     onPress={handleSubmit(onSubmit)}
                     error={Object.keys(errors).length !== 0}
                 />

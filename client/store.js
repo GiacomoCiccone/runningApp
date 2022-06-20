@@ -6,11 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialState = {};
 
-const middleware = [thunk];
+const middlewares = [thunk];
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
+  blacklist: ['trackingSession']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -19,7 +20,7 @@ export const store = createStore(
   persistedReducer,
   initialState,
   compose(
-    applyMiddleware(...middleware),
+    applyMiddleware(...middlewares),
   )
 );
 

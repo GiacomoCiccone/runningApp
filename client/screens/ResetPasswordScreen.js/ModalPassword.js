@@ -6,12 +6,12 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "../../providers/theme.provider";
 import Spacing from "../../components/Spacing";
 
-const ModalPassword = ({ onDismiss, ...props }) => {
+const ModalPassword = ({visible, onDismiss, ...props }) => {
     const theme = useTheme();
 
 
     return (
-        <Modal onDismiss={onDismiss} {...props}>
+        <Modal visible={visible} onDismiss={onDismiss} {...props}>
             <RN.View style={{ alignItems: "center", width: 300 }}>
                 <Icon size={150} color={theme.colors.primary} name="check-circle" />
 
@@ -34,6 +34,7 @@ const ModalPassword = ({ onDismiss, ...props }) => {
                 <Spacing size={"4xl"} horizontal />
 
                 <Paper.Button
+                    uppercase={false}
                     labelStyle={{ color: "white" }}
                     contentStyle={{ width: 250, height: 50 }}
                     mode="contained"

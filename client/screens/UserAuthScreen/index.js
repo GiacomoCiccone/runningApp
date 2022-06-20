@@ -16,19 +16,22 @@ import { RESET_ERROR_USER } from "../../actions";
 const UserAuthScreen = () => {
     const theme = useTheme();
 
-    const user = useSelector((state) => state.user);
+    const userError = useSelector((state) => state.user.error);
+    const userIsLoading = useSelector((state) => state.user.isLoading);
+
     const dispatch = useDispatch();
 
     const resetError = React.useCallback(() => {
         dispatch({ type: RESET_ERROR_USER });
     }, []);
 
+
     return (
         <RN.SafeAreaView style={styles.safeContainer}>
 
-            {user.isLoading && <Paper.ProgressBar indeterminate style={styles.progressBar} />}
+            {userIsLoading && <Paper.ProgressBar indeterminate style={styles.progressBar} />}
             <SnackBar
-                visible={user.error}
+                visible={userError}
                 onDismiss={resetError}
                 action={{
                     label: "ok",
@@ -36,7 +39,7 @@ const UserAuthScreen = () => {
                 }}
                 type="error"
             >
-                {user.error}
+                {userError}
             </SnackBar>
 
             <RN.View style={styles.logoContainer}>

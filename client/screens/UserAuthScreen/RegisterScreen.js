@@ -38,7 +38,7 @@ const RegisterScreen = () => {
             registerFullName: "",
         },
     });
-    const registerPassword = watch("registerPassword");
+    const userIsLoading = watch("registerPassword");
 
     const [registerPasswordVisibility, setRegisterPasswordVisibility] =
         React.useState(true);
@@ -176,7 +176,7 @@ const RegisterScreen = () => {
                 <Spacing horizontal size="5xl" />
 
                 <ButtonSubmit
-                    loading={user.isLoading}
+                    loading={userIsLoading}
                     error={Object.keys(errors).length !== 0}
                     onPress={handleSubmit(onSubmit)}
                     label="Continua"

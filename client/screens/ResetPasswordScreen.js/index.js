@@ -2,30 +2,34 @@ import * as React from "react";
 
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
+import * as Moti from "moti";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { useTheme } from "../../providers/theme.provider";
 
 import Logo from "../../components/Logo";
 import Spacing from "../../components/Spacing";
-
 import ModalPassword from "../ResetPasswordScreen.js/ModalPassword";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import ControlledTextInput from "../../components/ControlledTextInput";
+import ControlledCodeInput from "../../components/ControlledCodeInput";
 import SnackBar from "../../components/SnackBar";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+
 import { resetPasswordAction } from "../../actions/userActions";
 import { RESET_ERROR_USER } from "../../actions";
+import AppHeader from "../../components/AppHeader";
 
 const ResetPasswordScreen = ({ navigation }) => {
     const theme = useTheme();
 
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user);
+    const userIsLoading = useSelector((state) => state.user.isLoading);
+    const userError = useSelector((state) => state.user.error)
 
     const {
         handleSubmit,
@@ -41,6 +45,7 @@ const ResetPasswordScreen = ({ navigation }) => {
     });
 
     const resetPassword = watch("resetPassword");
+    const resetToken = watch("resetToken");
 
     const [showModal, setShowModal] = React.useState(false);
     const [resetPasswordVisibility, setResetPasswordVisibility] =
@@ -61,7 +66,7 @@ const ResetPasswordScreen = ({ navigation }) => {
 
     const resetError = React.useCallback(() => {
         dispatch({ type: RESET_ERROR_USER });
-        navigation.replace("UserAuth");
+        navigation.goBack()
     }, []);
 
     const onSuccess = React.useCallback(() => {
@@ -70,7 +75,7 @@ const ResetPasswordScreen = ({ navigation }) => {
 
     const closeModal = React.useCallback(() => {
         setShowModal(false);
-        navigation.replace("UserAuth");
+        navigation.goBack()
     }, []);
 
     const onSubmit = async (data) => {
@@ -81,11 +86,14 @@ const ResetPasswordScreen = ({ navigation }) => {
 
     return (
         <RN.SafeAreaView style={styles.safeContainer}>
-            {user.isLoading && (
+            {userIsLoading && (
                 <Paper.ProgressBar indeterminate style={styles.progressBar} />
             )}
+
+            <AppHeader />
+
             <SnackBar
-                visible={user.error}
+                visible={userError}
                 onDismiss={resetError}
                 action={{
                     label: "ok",
@@ -93,7 +101,7 @@ const ResetPasswordScreen = ({ navigation }) => {
                 }}
                 type="error"
             >
-                {user.error}
+                {userError}
             </SnackBar>
 
             <RN.View style={styles.logoContainer}>
@@ -130,7 +138,7 @@ const ResetPasswordScreen = ({ navigation }) => {
                         },
                     ]}
                 >
-                    Scegli la nuova password per entrare nel tuo account.
+                    Inserisci il codice dalla mail e scegli una nuova password.
                 </Paper.Subheading>
 
                 <Spacing horizontal size="4xl" />
@@ -138,18 +146,26 @@ const ResetPasswordScreen = ({ navigation }) => {
                 <KeyboardAvoidingWrapper>
                     <RN.View style={styles.inputContainer}>
                         <RN.View style={styles.inputWrapper}>
-                            <ControlledTextInput
+                            <ControlledCodeInput
+                                name="resetToken"
                                 control={control}
                                 rules={{
                                     required: "Codice richiesto",
+                                    minLength: {
+                                        value: 4,
+                                        message: "Codice richiesto",
+                                    },
                                 }}
-                                label="Codice di ripristino"
-                                name="resetToken"
                                 error={errors.resetToken}
+                                full={resetToken.length === 4}
                             />
                         </RN.View>
 
-                        <RN.View style={styles.inputWrapper}>
+                        <Moti.MotiView
+                            animate={{ scale: resetToken.length === 4 ? 1 : 0 }}
+                            transition={{ type: "timing" }}
+                            style={styles.inputWrapper}
+                        >
                             <ControlledTextInput
                                 control={control}
                                 rules={{
@@ -175,9 +191,13 @@ const ResetPasswordScreen = ({ navigation }) => {
                                 secureTextEntry={resetPasswordVisibility}
                                 error={errors.resetPassword}
                             />
-                        </RN.View>
+                        </Moti.MotiView>
 
-                        <RN.View style={styles.inputWrapper}>
+                        <Moti.MotiView
+                            animate={{ scale: resetToken.length === 4 ? 1 : 0 }}
+                            transition={{ type: "timing" }}
+                            style={styles.inputWrapper}
+                        >
                             <ControlledTextInput
                                 control={control}
                                 rules={{
@@ -204,16 +224,19 @@ const ResetPasswordScreen = ({ navigation }) => {
                                 secureTextEntry={resetConfirmPasswordVisibility}
                                 error={errors.resetConfirmPassword}
                             />
-                        </RN.View>
+                        </Moti.MotiView>
 
-                        <Spacing horizontal size="5xl" />
+                        <Spacing horizontal size="3xl" />
 
-                        <ButtonSubmit
-                            label="Salva"
-                            style={{ alignSelf: "center" }}
-                            onPress={handleSubmit(onSubmit)}
-                            error={Object.keys(errors).length !== 0}
-                        />
+                        {resetToken.length === 4 && (
+                            <ButtonSubmit
+                                loading={userIsLoading || userError}
+                                label="Salva"
+                                style={{ alignSelf: "center" }}
+                                onPress={handleSubmit(onSubmit)}
+                                error={Object.keys(errors).length !== 0}
+                            />
+                        )}
                     </RN.View>
                 </KeyboardAvoidingWrapper>
             </RN.View>
@@ -256,7 +279,7 @@ const styles = RN.StyleSheet.create({
     },
     inputContainer: {
         width: "100%",
-        minHeight: 450
+        minHeight: 450,
     },
 });
 

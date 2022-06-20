@@ -24,7 +24,7 @@ const LoginScreen = () => {
     const switchTab = useTabNavigation();
     const index = useTabIndex();
 
-    const user = useSelector((state) => state.user);
+    const userIsLoading = useSelector((state) => state.user.isLoading);
     const dispatch = useDispatch();
 
     const {
@@ -114,7 +114,7 @@ const LoginScreen = () => {
                 <Spacing horizontal size="7xl" />
 
                 <ButtonSubmit
-                    loading={user.isLoading}
+                    loading={userIsLoading}
                     error={Object.keys(errors).length !== 0}
                     onPress={handleSubmit(onSubmit)}
                     label="Accedi"
