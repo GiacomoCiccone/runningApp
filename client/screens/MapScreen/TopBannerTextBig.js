@@ -11,10 +11,13 @@ import Spacing from "../../components/Spacing";
 
 import { msToHMS } from "../../utils";
 
-const TopBannerTextBig = React.memo(({ label, id }) => {
+const TopBannerTextBig = ({ label, id }) => {
     const theme = useTheme();
 
-    const value = useSelector((state) => state.trackingSession[id]);
+    let value = useSelector((state) => state.trackingSession[id]);
+
+    if(id === "time") value = msToHMS(value)
+    else value = value.toFixed(2)
 
     return (
         <RN.View style={styles.bigTextContainer}>
@@ -25,7 +28,7 @@ const TopBannerTextBig = React.memo(({ label, id }) => {
                     color: theme.colors.text,
                 }}
             >
-                {msToHMS(value || 0)}
+                {value}
             </Paper.Text>
 
             <Spacing horizontal size="xs" />
@@ -35,7 +38,7 @@ const TopBannerTextBig = React.memo(({ label, id }) => {
             </Paper.Text>
         </RN.View>
     );
-});
+};
 
 const styles = RN.StyleSheet.create({
     bigTextContainer: {

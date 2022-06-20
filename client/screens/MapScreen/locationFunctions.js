@@ -4,7 +4,7 @@ import * as TaskManager from "expo-task-manager";
 
 import { store } from '../../store/'
 import { UPDATE_TRACKING_INFO } from "../../actions";
-import { calcCalories, calcDistance, fakeUser } from "../../utils";
+import { calcCalories, calcDistance, fakeUser, kalman } from "../../utils";
 
 const BACKGROUND_LOCATION_TASK = "BACKGROUND_LOCATION_TASK";
 
@@ -83,9 +83,12 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
         const { locations } = data;
         const locationData = locations[0];
         const {altitude, latitude, longitude, speed: speedMeterSeconds, elevation, accuracy} = locationData.coords;
+        const timestamp = locationData.timestamp;
         const location = {
             latitude,
-            longitude
+            longitude,
+            timestamp: new Date(timestamp),
+            accuracy
         }
         const globalState = store.getState();
 
@@ -98,15 +101,21 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
             if(!trackingState.trackingActive) {   //if the tracking is not active, update only this informations
                 store.dispatch({type: UPDATE_TRACKING_INFO, payload: {currentLocation: location}})
             } else {
-                const lastPos = trackingState.history.length > 0 ? trackingState.history[trackingState.history.length - 1] : location
-                const deltaDistance = calcDistance(location, lastPos)
+                const lastLocation = trackingState.history[trackingState.numOfPauses]?.length > 0 ? trackingState.history[trackingState.numOfPauses][trackingState.history[trackingState.numOfPauses].length - 1] : location
+                const deltaDistance = calcDistance(location, lastLocation)
                 const distance = (deltaDistance + trackingState.distance)
                 const averageSpeed = trackingState.time > 0 ? distance / trackingState.time : 0
                 const calories = calcCalories(user.userInfo.weight, distance);
-                const speed = speedMeterSeconds / 3.6 //from m/s to km/s
+                const speed = speedMeterSeconds * 3.6 //from m/s to km/s
+                let history = trackingState.history;
+                if(history[trackingState.numOfPauses]?.length > 0) {
+                    history[trackingState.numOfPauses].push(location)
+                } else {
+                    history[trackingState.numOfPauses] = [location]
+                }
                 const payload = {
-                    location,
-                    history: [...trackingState.history, location],
+                    location: kalman(location, lastLocation === location ? null : location),
+                    history,
                     elevation,
                     speed,
                     distance,

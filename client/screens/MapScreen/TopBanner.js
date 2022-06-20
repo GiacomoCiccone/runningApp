@@ -48,11 +48,11 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                         }}
                     >
                         <RN.View style={styles.textContainer}>
-                            <TopBannerTextNormal label="Durata" value="0,00" />
+                        <TopBannerTextNormal label="Calorie" id="calories" unit="Kcal" />
 
-                            <TopBannerTextNormal label="Durata" value="0,00" />
+<TopBannerTextNormal label="Durata" id="time" />
 
-                            <TopBannerTextNormal label="Durata" value="0,00" />
+<TopBannerTextNormal label="Distanza" id="distance" unit="Km" />
                         </RN.View>
                     </RN.View>
                 </RN.TouchableWithoutFeedback>

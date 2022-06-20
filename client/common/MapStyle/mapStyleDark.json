@@ -43,7 +43,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -88,7 +88,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -118,7 +118,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -136,7 +136,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -166,7 +166,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -184,7 +184,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -229,7 +229,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -250,7 +250,7 @@
         "elementType": "labels",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -259,7 +259,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -301,7 +301,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },
@@ -319,7 +319,7 @@
         "elementType": "labels.icon",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     },

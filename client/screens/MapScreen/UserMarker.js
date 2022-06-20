@@ -6,7 +6,7 @@ import * as Svg from "react-native-svg";
 import { LocationArrow } from "../../assets/images";
 import { useTheme } from "../../providers/theme.provider";
 
-const MARKER_WIDTH = 50;
+const MARKER_WIDTH = 40;
 
 const UserMarker = ({ rotation }) => {
 

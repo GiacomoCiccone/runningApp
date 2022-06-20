@@ -8,11 +8,15 @@ import { useSelector } from "react-redux";
 import { useTheme } from "../../providers/theme.provider";
 
 import Spacing from "../../components/Spacing";
+import { msToHMS } from "../../utils";
 
 const TopBannerTextNormal = ({label, id, unit}) => {
     const theme = useTheme();
 
-    const value = useSelector((state) => state.trackingSession[id]);
+    let value = useSelector((state) => state.trackingSession[id]);
+
+    if(id === "time") value = msToHMS(value)
+    else value = value.toFixed(2)
 
 
     return (
@@ -25,7 +29,7 @@ const TopBannerTextNormal = ({label, id, unit}) => {
                 fontFamily: "Rubik-Bold",
             }}
         >
-            {value?.toFixed(2) || "0.00"}
+            {value}
             </Paper.Text>
             
 

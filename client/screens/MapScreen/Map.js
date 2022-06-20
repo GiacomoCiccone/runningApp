@@ -11,60 +11,155 @@ import UserMarker from "./UserMarker";
 
 import mapStyleLight from "../../common/MapStyle/mapStyleLight.json";
 import mapStyleDark from "../../common/MapStyle/mapStyleDark.json";
+import { Circle } from "react-native-svg";
+import CircleMarker from "./CircleMarker";
 
+const Map = ({
+    setFullSize,
+    mapType,
+    centerToLocation,
+    setCenterToLocation,
+}) => {
+    const theme = useTheme();
 
-const Map = ({setFullSize}) => {
-
-    const theme = useTheme()
-
-    const currentLocation = useSelector((state) => state.trackingSession.currentLocation);
-    const heading = useSelector(state => state.trackingSession.heading)
-
+    const currentLocation = useSelector(
+        (state) => state.trackingSession.currentLocation
+    );
+    const heading = useSelector((state) => state.trackingSession.heading);
+    const history = useSelector((state) => state.trackingSession.history);
+    const numOfPauses = useSelector(
+        (state) => state.trackingSession.numOfPauses
+    );
 
     const [mapReady, setMapReady] = React.useState(false);
 
     const setFullSizeFalse = React.useCallback(() => {
-        setFullSize(false)
-    }, [])
+        setFullSize(false);
+    }, []);
 
     const onMapReady = React.useCallback(() => {
         setMapReady(true);
     }, []);
 
     return (
-        <MapView
-            showsCompass={false}
-            showsMyLocationButton={false}
-            loadingEnabled
-            loadingIndicatorColor={theme.colors.primary}
-            loadingBackgroundColor={theme.colors.background}
-            onMapReady={onMapReady}
-            onPress={setFullSizeFalse}
-            customMapStyle={theme.dark ? mapStyleDark : mapStyleLight}
-            style={styles.map}
-            provider="google"
-        >
-            {currentLocation && (
-                <ReactMap.Marker
-                    anchor={{
-                        x: 0.5,
-                        y: 0.5,
+        <>
+            {currentLocation ? (
+                <MapView
+                    initialRegion={{
+                        latitude: currentLocation.latitude,
+                        longitude: currentLocation.longitude,
+                        latitudeDelta: 0.002,
+                        longitudeDelta: 0.002,
                     }}
-                    rotation={heading}
-                    coordinate={currentLocation}
+                    region={
+                        centerToLocation
+                            ? {
+                                  latitude: currentLocation.latitude,
+                                  longitude: currentLocation.longitude,
+                                  latitudeDelta: 0.002,
+                                  longitudeDelta: 0.002,
+                              }
+                            : null
+                    }
+                    showsCompass={false}
+                    showsMyLocationButton={false}
+                    loadingEnabled
+                    loadingIndicatorColor={theme.colors.primary}
+                    loadingBackgroundColor={theme.colors.background}
+                    onMapReady={onMapReady}
+                    onPress={setFullSizeFalse}
+                    onTouchStart={() => setCenterToLocation(false)}
+                    customMapStyle={theme.dark ? mapStyleDark : mapStyleLight}
+                    style={styles.map}
+                    provider="google"
+                    mapType={mapType}
+                    rotateEnabled={false}
                 >
-                    <UserMarker />
-                </ReactMap.Marker>
+                    {currentLocation && (
+                        <ReactMap.Marker
+                            anchor={{
+                                x: 0.5,
+                                y: 0.5,
+                            }}
+                            rotation={heading}
+                            coordinate={currentLocation}
+                        >
+                            <UserMarker />
+                        </ReactMap.Marker>
+                    )}
+                    {history.map((subHistory, i) => {
+                        if (!subHistory) return;
+                        return (
+                            <ReactMap.Polyline
+                                key={'polyline-' + i}
+                                lineCap="round"
+                                fillColor={theme.colors.primary}
+                                strokeColor={theme.colors.primary}
+                                strokeWidth={theme.border["2xl"]}
+                                coordinates={subHistory.map((location) => {
+                                    return {
+                                        longitude: location.longitude,
+                                        latitude: location.latitude,
+                                    };
+                                })}
+                            />
+                        );
+                    })}
+
+                    {history.map((subHistory, i) => {
+                        if (!subHistory) return;
+
+                        const coordinateStart = {
+                            latitude: subHistory[0].latitude,
+                            longitude: subHistory[0].longitude,
+                        };
+
+                        const coordinateEnd = {
+                            latitude:
+                                subHistory[subHistory.length - 1].latitude,
+                            longitude:
+                                subHistory[subHistory.length - 1].longitude,
+                        };
+                        return (
+                            <RN.View
+                            key={"marker-"+i}>
+                                <ReactMap.Marker
+                                    anchor={{ x: 0.5, y: 0.5 }}
+                                    coordinate={coordinateStart}
+                                >
+                                    <CircleMarker />
+                                </ReactMap.Marker>
+
+                                {numOfPauses > i && (
+                                    <ReactMap.Marker
+                                        anchor={{ x: 0.5, y: 0.5 }}
+                                        coordinate={coordinateEnd}
+                                    >
+                                        <CircleMarker />
+                                    </ReactMap.Marker>
+                                )}
+                            </RN.View>
+                        );
+                    })}
+                </MapView>
+            ) : (
+                <RN.View
+                    style={[
+                        styles.map,
+                        { backgroundColor: theme.colors.background },
+                    ]}
+                ></RN.View>
             )}
-        </MapView>
+        </>
     );
 };
 
 const styles = RN.StyleSheet.create({
     map: {
-        width: '100%',
-        height: '100%',
-        position: 'absolute'
+        width: "100%",
+        height: "110%",
+        position: "absolute",
+        bottom: "-10%",
     },
 });
 

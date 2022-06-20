@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux/";
 import TopBanner from "./TopBanner";
 import PermissionModal from "./PermissionModal";
 import SnackBar from "../../components/SnackBar";
-
+import { store } from '../../store/'
 import BottomBanner from "./BottomBanner";
 import { LOCATION_ERROR, START_SESSION, UPDATE_TRACKING_INFO, RESET_LOCATION_ERROR, SET_TRACKING_INACTIVE, SET_TRACKING_ACTIVE, } from "../../actions";
 import { requestPermissions, startBackgroundUpdate, stopBackgroundUpdate } from "./locationFunctions";
@@ -25,6 +25,8 @@ const MapScreen = ({ navigation }) => {
     const [isGPSEnabled, setGPSisEnabled] = React.useState(false); //track information about gps
 
     const [fullSizeBanner, setFullSizeBanner] = React.useState(true);
+    const [mapType, setMapType] = React.useState('standard');
+    const [centerToLocation, setCenterToLocation] = React.useState(true);
 
     const [showPermissionModal, setShowPermissionModal] = React.useState(false);
     
@@ -94,24 +96,26 @@ const MapScreen = ({ navigation }) => {
     React.useEffect(() => {
         (async () => {
             Location.watchHeadingAsync((data) => {
+                const currentHeading = store.getState().trackingSession.heading
                 dispatch({
                     type: UPDATE_TRACKING_INFO,
-                    payload: { heading: data.magHeading },
+                    payload: { heading: (data.magHeading + currentHeading) / 2 }, //smoother heading
                 });
             });
         })();
     }, []);
 
-    // //update time every second by 1000 milliseconds
-    // React.useEffect(() => {
-    //     let interval;
-    //     if(trackingActive) {
-    //         interval = setInterval(() => {
-    //             dispatch({type: UPDATE_TRACKING_INFO, payload: {time: state.trackingInfo.time + 1000}}) //add 1000 milliseconds to the time
-    //         }, 1000);
-    //     }
-    //     return () => clearInterval(interval)
-    // }, [trackingActive, state.trackingInfo.time]);
+    //update time every second by 1000 milliseconds
+    React.useEffect(() => {
+        let interval;
+        if(trackingActive) {
+            interval = setInterval(() => {
+                const currentTime = store.getState().trackingSession.time
+                dispatch({type: UPDATE_TRACKING_INFO, payload: {time: currentTime + 1000}}) //add 1000 milliseconds to the time
+            }, 1000);
+        }
+        return () => clearInterval(interval)
+    }, [trackingActive]);
 
     return (
         <RN.SafeAreaView style={styles.safeContainer}>
@@ -133,10 +137,10 @@ const MapScreen = ({ navigation }) => {
                 setFullSize={setFullSizeBanner}
             />
 
-            <Map setFullSize={setFullSizeBanner} />
+            <Map setFullSize={setFullSizeBanner} setCenterToLocation={setCenterToLocation} centerToLocation={centerToLocation} mapType={mapType}/>
 
 
-            <BottomBanner />
+            <BottomBanner fullSize={fullSizeBanner} changeMapType={setMapType} setCenterToLocation={setCenterToLocation} centerToLocation={centerToLocation} setFullSize={setFullSizeBanner}/>
 
             <PermissionModal
                 visible={showPermissionModal}

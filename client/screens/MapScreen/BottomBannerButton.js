@@ -26,6 +26,10 @@ const BottomBannerButton = ({
                 },
                 style,
             ]}
+            contentStyle={{
+                height: '100%',
+                width: '100%'
+            }}
             labelStyle={{
                 color: labelColor,
             }}

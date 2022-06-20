@@ -11,15 +11,6 @@ const SlideToUnlock = ({setUnlocked}) => {
     const theme = useTheme()
 
     return (
-        <Moti.MotiView
-            from={{ translateY: 100 }}
-            animate={{ translateY: 0 }}
-            transition={{ type: "timing" }}
-            exit={{ translateY: 100 }}
-            exitTransition={{
-                type: "timing",
-            }}
-        >
             <Slider
                 childrenContainer={{
                     width: "100%",
@@ -32,10 +23,8 @@ const SlideToUnlock = ({setUnlocked}) => {
                 }}
                 containerStyle={{
                     margin: 8,
-                    backgroundColor: theme.colors.background,
-                    borderRadius: theme.rounded.xl,
-                    paddingHorizontal: theme.spacing.sm,
-                    overflow: "hidden",
+                    backgroundColor: theme.colors.text,
+                    borderRadius: theme.rounded.full,
                     alignItems: "center",
                     justifyContent: "center",
                     height: 50,
@@ -45,31 +34,32 @@ const SlideToUnlock = ({setUnlocked}) => {
                 sliderElement={
                     <RN.View
                         style={{
-                            backgroundColor: theme.colors.text,
-                            width: 50,
-                            height: 35,
-                            borderRadius: theme.rounded.xl,
+                            backgroundColor: theme.colors.background,
+                            width: 60,
+                            height: 60,
+                            borderRadius: theme.rounded.full,
                             justifyContent: "center",
                             alignItems: "center",
+
                         }}
                     >
                         <Icon
                             name="chevron-triple-right"
                             size={30}
-                            color={theme.colors.background}
+                            color={theme.colors.text}
                         />
                     </RN.View>
                 }
             >
                 <Paper.Text
                     style={{
+                        color: theme.colors.background,
                         fontFamily: "Rubik-Medium",
                     }}
                 >
                     Scorri per sbloccare
                 </Paper.Text>
             </Slider>
-        </Moti.MotiView>
     );
 };
 

@@ -16,7 +16,7 @@ import {
     ThunderIconOutlineDark,
     ThunderIconOutlineWhite,
 } from "../assets/images/index.js";
-import ToucableRipple from "./ToucableRipple.js";
+import TouchableRipple from "./TouchableRipple.js";
 
 
 
@@ -104,7 +104,7 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
 
     return (
         <RN.View style={styles.touchableWrapper}>
-            <ToucableRipple
+            <TouchableRipple
                 accessibilityRole="button"
                 accessibilityState={
                     isFocused ? { selected: true } : {}
@@ -168,7 +168,7 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
                         </RN.View>
                     )}
                 </Moti.MotiView>
-            </ToucableRipple>
+            </TouchableRipple>
         </RN.View>
     );
 }

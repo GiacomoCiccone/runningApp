@@ -14,7 +14,8 @@ const initialState = {
     startDate: null,
     trackingActive: false,
     error: null,
-    inBackground: false
+    inBackground: false,
+    numOfPauses: 0
 };
 
 export default function trackingSessionReducer(state = initialState, action) {
@@ -46,6 +47,7 @@ export default function trackingSessionReducer(state = initialState, action) {
             return {
                 ...state,
                 trackingActive: false,
+                numOfPauses: state.numOfPauses + 1
             };
         case SWITCH_TO_BACKGROUND: 
             return {

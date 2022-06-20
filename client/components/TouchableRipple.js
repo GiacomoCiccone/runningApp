@@ -4,7 +4,7 @@ import * as Paper from "react-native-paper";
 
 import { useTheme } from "../providers/theme.provider";
 
-const ToucableRipple = ({ rippleColor, left, right, children, ...props }) => {
+const TouchableRipple = ({ rippleColor, left, right, children, ...props }) => {
     const theme = useTheme()
 
     return (
@@ -32,7 +32,8 @@ const ToucableRipple = ({ rippleColor, left, right, children, ...props }) => {
 
 const styles = RN.StyleSheet.create({
     touchableWrapper: {
-        flex: 1,
+        height: "100%",
+        width: '100%',
         justifyContent: "center",
         alignItems: "center",
         overflow: "hidden",
@@ -45,4 +46,4 @@ const styles = RN.StyleSheet.create({
     },
 });
 
-export default ToucableRipple;
+export default TouchableRipple;
