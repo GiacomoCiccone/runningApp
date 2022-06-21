@@ -26,7 +26,7 @@ export const calcDistance = (pos1, pos2) => {
 
 export const msToHMS = ( ms ) => {
     // 1- Convert to seconds:
-    let seconds = ms / 1000;
+    let seconds = parseInt(ms / 1000);
     // 2- Extract hours:
     const hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
     seconds = seconds % 3600; // seconds remaining after extracting hours
@@ -71,7 +71,7 @@ export const kalman = (location, lastLocation, constant = 500) => {
       result.variance = accuracy * accuracy;
     } else {
       const timestampInc =
-        location.timestamp.getTime() - lastLocation.timestamp.getTime();
+        new Date(location.timestamp).getTime() - new Date(lastLocation.timestamp).getTime();
   
       if (timestampInc > 0) {
         // We can tune the velocity and particularly the coefficient at the end

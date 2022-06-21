@@ -1,4 +1,4 @@
-import { LOCATION_ERROR, RESET_LOCATION_ERROR, RESET_STATE, SET_TRACKING_ACTIVE, SET_TRACKING_INACTIVE, UPDATE_TRACKING_INFO, SWITCH_TO_BACKGROUND, REHYDRATE_SESSION_FROM_STORAGE, START_SESSION } from "../actions";
+import { LOCATION_ERROR, RESET_LOCATION_ERROR, RESET_STATE, SET_TRACKING_ACTIVE, SET_TRACKING_INACTIVE, UPDATE_TRACKING_INFO, REHYDRATE_SESSION_FROM_STORAGE, START_SESSION } from "../actions";
 
 const initialState = {
     currentLocation: null,
@@ -14,7 +14,6 @@ const initialState = {
     startDate: null,
     trackingActive: false,
     error: null,
-    inBackground: false,
     numOfPauses: 0
 };
 
@@ -32,6 +31,7 @@ export default function trackingSessionReducer(state = initialState, action) {
                 ...state,
                 error: action.payload,
                 trackingActive: false,
+                numOfPauses: state.numOfPauses + 1
             };
         case RESET_LOCATION_ERROR:
             return {
@@ -49,11 +49,6 @@ export default function trackingSessionReducer(state = initialState, action) {
                 trackingActive: false,
                 numOfPauses: state.numOfPauses + 1
             };
-        case SWITCH_TO_BACKGROUND: 
-            return {
-                ...state,
-                inBackground: true
-            }
         case START_SESSION:
             return {
                 ...state,
@@ -64,7 +59,7 @@ export default function trackingSessionReducer(state = initialState, action) {
             return {
                 ...state,
                 ...action.payload,
-                inBackground: false
+                startDate: new Date(Date.parse(action.payload.startDate)),
             }
         }
         default:

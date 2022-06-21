@@ -21,7 +21,7 @@ const BottomBannerButton = ({
             style={[
                 {
                     backgroundColor,
-                    borderRadius: theme.rounded.xl,
+                    borderRadius: theme.rounded.full,
                     ...theme.shadowBox.lg,
                 },
                 style,

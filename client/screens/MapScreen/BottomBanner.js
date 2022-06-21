@@ -54,8 +54,8 @@ const BottomBanner = ({
     );
     const dispatch = useDispatch();
 
-    //swipe button
-    const [unlocked, setUnlocked] = React.useState(false);
+    
+    const [unlocked, setUnlocked] = React.useState(false); //swipe button
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     //when the user press start must set active tracking true

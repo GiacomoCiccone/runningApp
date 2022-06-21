@@ -1,12 +1,13 @@
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
-
+import AsyncStorage from "@react-native-async-storage/async-storage/";
 
 import { store } from '../../store/'
 import { UPDATE_TRACKING_INFO } from "../../actions";
 import { calcCalories, calcDistance, fakeUser, kalman } from "../../utils";
 
 const BACKGROUND_LOCATION_TASK = "BACKGROUND_LOCATION_TASK";
+export const TRACKING_SESSION_KEY = "TRACKING_SESSION_KEY"
 
 // Request permissions
 export const requestPermissions = async () => {
@@ -61,6 +62,8 @@ export const startBackgroundUpdate = async () => {
     });
 };
 
+    
+
 // Stop location tracking in background
 export const stopBackgroundUpdate = async () => {
     const hasStarted = await Location.hasStartedLocationUpdatesAsync(
@@ -68,6 +71,7 @@ export const stopBackgroundUpdate = async () => {
     );
     if (hasStarted) {
         await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
+        console.log("Background task stopped")
     }
 };
 
@@ -93,11 +97,12 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
         const globalState = store.getState();
 
         const trackingState = globalState.trackingSession;
+        const trackingStateSaved = await AsyncStorage.getItem(TRACKING_SESSION_KEY);
         //const user = globalState.user;
         const user = fakeUser
 
         //the app is the foreground
-        if (!trackingState.inBackground) {
+        if (!trackingStateSaved) {
             if(!trackingState.trackingActive) {   //if the tracking is not active, update only this informations
                 store.dispatch({type: UPDATE_TRACKING_INFO, payload: {currentLocation: location}})
             } else {
@@ -127,8 +132,37 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
                 store.dispatch({type: UPDATE_TRACKING_INFO, payload})
             }
 
-        } else { //the app is the background
-
+        } else { //the app is the background do the same but in storage
+            const trackingState = JSON.parse(trackingStateSaved)
+            if(trackingState.trackingActive) {
+                const lastLocation = trackingState.history[trackingState.numOfPauses]?.length > 0 ? trackingState.history[trackingState.numOfPauses][trackingState.history[trackingState.numOfPauses].length - 1] : location
+                const deltaDistance = calcDistance(location, lastLocation)
+                const distance = (deltaDistance + trackingState.distance)
+                const averageSpeed = trackingState.time > 0 ? distance / trackingState.time : 0
+                const calories = calcCalories(user.userInfo.weight, distance);
+                const speed = speedMeterSeconds * 3.6 //from m/s to km/s
+                let history = trackingState.history;
+                if(history[trackingState.numOfPauses]?.length > 0) {
+                    history[trackingState.numOfPauses].push(location)
+                } else {
+                    history[trackingState.numOfPauses] = [location]
+                }
+                const payload = {
+                    ...trackingState,
+                    location: kalman(location, lastLocation === location ? null : location),
+                    history,
+                    elevation,
+                    speed,
+                    distance,
+                    averageSpeed,
+                    currentLocation: location,
+                    calories,
+                    altitude
+                }
+    
+                await AsyncStorage.setItem(TRACKING_SESSION_KEY, JSON.stringify(payload));
+            }
+           
         }
     }
 });

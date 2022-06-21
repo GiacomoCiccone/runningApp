@@ -1,15 +1,17 @@
 import * as React from "react";
 import * as RN from "react-native";
 import * as Moti from "moti";
-import * as Paper from 'react-native-paper'
+import * as Paper from "react-native-paper";
+
+//redux
+import { useSelector } from "react-redux";
 
 import { useTheme } from "../../providers/theme.provider";
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import TopBannerTextNormal from "./TopBannerTextNormal";
 import TopBannerTextBig from "./TopBannerTextBig";
-
 
 const HEIGHT_CONTAINER_1 = 200;
 const HEIGHT_CONTAINER_1_BIG_TEXT = 100;
@@ -22,9 +24,10 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
     const theme = useTheme();
 
     const setFullSizeTrue = React.useCallback(() => {
-        setFullSize(true)
-    }, [])
-    
+        setFullSize(true);
+    }, []);
+
+    const wheater = useSelector(state => state.trackingSession.wheater);
 
     return (
         <>
@@ -48,11 +51,19 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                         }}
                     >
                         <RN.View style={styles.textContainer}>
-                        <TopBannerTextNormal label="Calorie" id="calories" unit="Kcal" />
+                            <TopBannerTextNormal
+                                label="Calorie"
+                                id="calories"
+                                unit="Kcal"
+                            />
 
-<TopBannerTextNormal label="Durata" id="time" />
+                            <TopBannerTextNormal label="Durata" id="time" />
 
-<TopBannerTextNormal label="Distanza" id="distance" unit="Km" />
+                            <TopBannerTextNormal
+                                label="Distanza"
+                                id="distance"
+                                unit="Km"
+                            />
                         </RN.View>
                     </RN.View>
                 </RN.TouchableWithoutFeedback>
@@ -77,20 +88,45 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                     }}
                 >
                     <RN.View style={[styles.topContainer1]}>
-                        <RN.View style={{flex: 1, marginLeft: theme.spacing.xl}}>
-
-                        </RN.View>
-
-                        <RN.View style={{flex: 1}}>
-
-                        </RN.View>
-
-                        <RN.View style={{flex: 1, alignItems: 'flex-end', marginRight: theme.spacing.xl}}>
-                            <Paper.Text style={{color: isGPSEnabled ? theme.colors.success: theme.colors.error, fontFamily: 'Rubik-Medium', fontSize: theme.fontSize.xs}}>
-                               GPS{" "}
-                            <Icon size={15} name={isGPSEnabled ? "signal" : "signal-off"} />
-                            </Paper.Text>
+                        <RN.View
+                            style={{ flex: 1, marginLeft: theme.spacing.xl}}
+                        >
+                            {wheater &&
+                            <RN.View style={{ flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                             
+                            <RN.Image source={{uri: `http://openweathermap.org/img/wn/${wheater.icon}@2x.png`}} style={{width: 30, height: 30, resizeMode: 'contain'}}/>
+                            <Paper.Text style={{fontSize: theme.fontSize.xs, fontFamily: 'Rubik-Medium'}}>
+                                {wheater.temp}°
+                            </Paper.Text>
+                            </RN.View> }
+                        </RN.View>
+
+                        <RN.View style={{ flex: 1 }}></RN.View>
+
+                        <RN.View
+                            style={{
+                                flex: 1,
+                                alignItems: "flex-end",
+                                marginRight: theme.spacing.xl,
+                            }}
+                        >
+                            <Paper.Text
+                                style={{
+                                    color: isGPSEnabled
+                                        ? theme.colors.success
+                                        : theme.colors.error,
+                                    fontFamily: "Rubik-Medium",
+                                    fontSize: theme.fontSize.xs,
+                                }}
+                            >
+                                GPS{" "}
+                                <Icon
+                                    size={18}
+                                    name={
+                                        isGPSEnabled ? "signal" : "signal-off"
+                                    }
+                                />
+                            </Paper.Text>
                         </RN.View>
                     </RN.View>
 
@@ -99,11 +135,23 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                     </RN.View>
 
                     <RN.View style={styles.textContainer}>
-                        <TopBannerTextNormal label="Calorie" id="calories" unit="Kcal" />
+                        <TopBannerTextNormal
+                            label="Calorie"
+                            id="calories"
+                            unit="Kcal"
+                        />
 
-                        <TopBannerTextNormal label="Velocità" id="speed" unit="Km/h" />
+                        <TopBannerTextNormal
+                            label="Velocità"
+                            id="speed"
+                            unit="Km/h"
+                        />
 
-                        <TopBannerTextNormal label="Distanza" id="distance" unit="Km" />
+                        <TopBannerTextNormal
+                            label="Distanza"
+                            id="distance"
+                            unit="Km"
+                        />
                     </RN.View>
                 </RN.View>
             </Moti.MotiView>
@@ -124,9 +172,9 @@ const styles = RN.StyleSheet.create({
     },
     topContainer1: {
         height: HEIGHT_CONTAINER_1_TOP,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexDirection: 'row'
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "row",
     },
 });
 
