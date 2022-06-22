@@ -61,6 +61,7 @@ const TextInput = ({ error, full, ...props }) => {
                         style={{
                             height: 70,
                             width: 50,
+                            fontSize: theme.fontSize.sm,
                             fontFamily: "Rubik-Medium",
                             textAlign: "center",
                             textAlignVertical: "center",

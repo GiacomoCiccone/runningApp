@@ -15,14 +15,12 @@ import WeightScreen from "./WeightScreen";
 import { updateAction } from "../../actions/userActions";
 import SnackBar from "../../components/SnackBar";
 import { RESET_ERROR_USER } from "../../actions";
-import { fakeUser } from "../../utils";
 
 const CompleteRegistrationScreen = () => {
     const theme = useTheme();
 
     const dispatch = useDispatch();
-    //const user = useSelector(state => state.user)
-    const userInfo = React.useRef(fakeUser).current
+    const user = useSelector(state => state.user)
 
     const [gender, setGender] = React.useState("male");
     const [weight, setWeight] = React.useState(70);

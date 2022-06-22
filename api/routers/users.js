@@ -39,12 +39,12 @@ router.route("/:id").put(protect, async (req, res, next) => {
 
                     //compariamo la password passata a quella salvata nel database
                     const isMatch = await user.matchPasswords(
-                        req.body.passwordOld
+                        req.body.oldPassword
                     );
 
                     if (!isMatch) {
                         return next(
-                            new ErrorResponse("Credenziali non corrette", 404)
+                            new ErrorResponse("Vecchia password non corretta", 404)
                         );
                     }
 

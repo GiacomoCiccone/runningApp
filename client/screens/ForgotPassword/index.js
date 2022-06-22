@@ -139,7 +139,6 @@ const ForgotPasswordScreen = ({navigation}) => {
 
             <ModalEmail
                 visible={showModal}
-                transparent={true}
                 onDismiss={closeModal}
             />
         </RN.SafeAreaView>

@@ -47,7 +47,7 @@ const TextInput = ({ error, ...props }) => {
             <Paper.TextInput
                 error={!!error}
                 {...props}
-                style={{ backgroundColor: theme.colors.background }}
+                style={{ backgroundColor: theme.colors.background, fontSize: theme.fontSize.sm }}
             />
             <Moti.AnimatePresence>
                 {!!error && (

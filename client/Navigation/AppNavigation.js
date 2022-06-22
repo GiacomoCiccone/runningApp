@@ -14,27 +14,23 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CompleteRegistrationScreen from "../screens/CompleteRegistrationScreen.js";
 import MapScreen from "../screens/MapScreen/";
 import StatsScreen from "../screens/StatsScreen/";
-import ProfileScreen from "../screens/ProfileScreen/";
+import ProfileScreen from "../screens/ProfileScreen/index";
 import TabBar from "../components/TabBar.js";
-
-import { fakeUser } from "../utils/";
-
 
 
 const Tab = createBottomTabNavigator();
 
 const AppNavigation = () => {
-    //const userInfo = useSelector(state => state.user.userInfo)
-    const userInfo = React.useRef(fakeUser.userInfo).current;
+    const gender = useSelector(state => state.user.userInfo.gender)
     const startDate = useSelector(state => state.trackingSession.startDate)
-
-    if (!userInfo.gender) return <CompleteRegistrationScreen />;
-
     const theme = useTheme()
 
-    const tabBarRender = React.useCallback(({ state, descriptors, navigation }) => <TabBar state={state} descriptors={descriptors} navigation={navigation} theme={theme} />, []) 
 
-    return (
+    const tabBarRender = React.useCallback(({ state, descriptors, navigation }) => <TabBar state={state} descriptors={descriptors} navigation={navigation} theme={theme} />, [theme]) 
+
+    if (!gender) return <CompleteRegistrationScreen />;
+
+    else return (
         <Tab.Navigator
             tabBar={tabBarRender}
             initialRouteName="Map"

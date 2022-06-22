@@ -54,7 +54,7 @@ const SlideToUnlock = ({setUnlocked}) => {
                 <Paper.Text
                     style={{
                         color: theme.colors.background,
-                        fontFamily: "Rubik-Medium",
+                        fontFamily: "Rubik-Medium", fontSize: theme.fontSize.sm
                     }}
                 >
                     Scorri per sbloccare

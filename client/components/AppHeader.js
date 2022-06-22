@@ -10,7 +10,6 @@ const AppHeader = () => {
     const theme = useTheme()
     const navigation = useNavigation()
 
-
     return (
         <Paper.Appbar style={[styles.header, {width: theme.dimensions.width}]}>
             <Paper.Appbar.BackAction color={theme.colors.text} onPress={() => navigation.goBack()}/>

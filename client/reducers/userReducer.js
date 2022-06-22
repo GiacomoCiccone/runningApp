@@ -2,7 +2,7 @@ import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
-    LOGOUT_SUCCESS,
+    LOGOUT,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
     REGISTER_REQUEST,
@@ -18,7 +18,8 @@ import {
     FORGOT_PASSWORD_FAIL,
     RESET_PASSWORD_REQUEST,
     RESET_PASSWORD_SUCCESS,
-    RESET_PASSWORD_FAIL
+    RESET_PASSWORD_FAIL,
+    RESET_UPDATED
 } from "../actions/";
 
 const initalState = {
@@ -26,10 +27,16 @@ const initalState = {
     isLoading: false,
     userInfo: null,
     error: null,
+    updated: []
 };
 
 export default function userReducer(state = initalState, action) {
     switch (action.type) {
+        case RESET_UPDATED:
+            return {
+                ...state,
+                updated: []
+            }
         case RESET_ERROR_USER:
         case FORGOT_PASSWORD_SUCCESS:
         case RESET_PASSWORD_SUCCESS:
@@ -48,6 +55,7 @@ export default function userReducer(state = initalState, action) {
                 userInfo: null,
                 isLoading: true,
                 error: null,
+                updated: []
             };
         case UPDATE_REQUEST:
         case DELETE_REQUEST:
@@ -65,7 +73,7 @@ export default function userReducer(state = initalState, action) {
                 isLoading: false,
                 error: null,
             };
-        case LOGOUT_SUCCESS:
+        case LOGOUT:
         case DELETE_SUCCESS:
             return {
                 ...state,
@@ -77,6 +85,7 @@ export default function userReducer(state = initalState, action) {
             return {
                 ...state,
                 isLoading: false,
+                updated: action.payload.updated,
                 userInfo: action.payload.userInfo,
             };
         case LOGIN_FAIL:
@@ -89,6 +98,7 @@ export default function userReducer(state = initalState, action) {
                 userInfo: null,
                 isLoading: false,
                 error: action.payload,
+                updated: []
             };
         case UPDATE_FAIL:
         case DELETE_FAIL:
@@ -96,6 +106,7 @@ export default function userReducer(state = initalState, action) {
                 ...state,
                 isLoading: false,
                 error: action.payload,
+                updated: []
             };
         default:
             return state;

@@ -27,7 +27,7 @@ const ModalEmail = ({ visible, onDismiss, ...props }) => {
 
                 <Spacing size={"lg"} horizontal />
 
-                <Paper.Text style={{ color: theme.colors.grey }}>
+                <Paper.Text style={{ color: theme.colors.grey, fontSize: theme.fontSize.sm }}>
                     Una mail contenente il codice per recuperare la tua password è
                     stata inviata nella tua casella di posta elettronica.
                 </Paper.Text>

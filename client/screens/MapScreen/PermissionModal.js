@@ -29,7 +29,7 @@ const PermissionModal = ({visible, onDismiss, ...props }) => {
 
                 <Spacing size={"lg"} horizontal />
 
-                <Paper.Text style={{ color: theme.colors.grey }}>
+                <Paper.Text style={{ color: theme.colors.grey, fontSize: theme.fontSize.sm }}>
                     Quest'app per funzionare ha bisogno dei permessi per la geolocalizzazione anche mentre non la si sta utilizzando.
                 </Paper.Text>
 

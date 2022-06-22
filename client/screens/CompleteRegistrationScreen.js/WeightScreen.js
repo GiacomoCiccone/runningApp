@@ -32,7 +32,7 @@ const WeightScreen = ({ goNext, weight, setWeight }) => {
 
             <RN.View style={styles.pickerContainer}>
 
-                <Picker defaultValue={defaultValue} precision={1} min={40} max={130} horizontal unit="kg" onChange={changeWeight}/>
+                <Picker defaultValue={defaultValue} min={40} max={130} horizontal unit="kg" onChange={changeWeight}/>
 
             </RN.View>
 

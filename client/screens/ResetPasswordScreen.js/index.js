@@ -7,7 +7,7 @@ import * as Moti from "moti";
 //redux
 import { useDispatch, useSelector } from "react-redux";
 
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { useTheme } from "../../providers/theme.provider";
 
@@ -243,7 +243,6 @@ const ResetPasswordScreen = ({ navigation }) => {
 
             <ModalPassword
                 visible={showModal}
-                transparent={true}
                 onDismiss={closeModal}
             />
         </RN.SafeAreaView>

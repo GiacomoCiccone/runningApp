@@ -122,7 +122,7 @@ const LoginScreen = () => {
 
                 <Spacing horizontal size="2xl" />
 
-                <Paper.Text style={{ color: theme.colors.placeholder }}>
+                <Paper.Text style={{ color: theme.colors.grey, fontSize: theme.fontSize.sm }}>
                     Non hai un account?{"  "}
                     <Paper.Text
                         style={{

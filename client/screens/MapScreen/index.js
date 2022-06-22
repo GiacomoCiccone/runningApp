@@ -15,11 +15,8 @@ import {
     LOCATION_ERROR,
     UPDATE_TRACKING_INFO,
     RESET_LOCATION_ERROR,
-    SET_TRACKING_INACTIVE,
-    SET_TRACKING_ACTIVE,
-    SWITCH_TO_BACKGROUND,
     REHYDRATE_SESSION_FROM_STORAGE,
-    RESET_STATE,
+    RESET_TRACKING_SESSION,
 } from "../../actions";
 import {
     requestPermissions,
@@ -30,12 +27,16 @@ import {
 import Map from "./Map";
 import axios from "axios";
 import { WHEATER_API_KEY } from "../../utils/constants";
+import ModalSummary from "./ModalSummary";
+import { sendTrackingInfo } from "../../actions/trackingSessionActions";
 
 const MapScreen = ({ navigation }) => {
+    //redux
     const dispatch = useDispatch();
     const trackingActive = useSelector(
         (state) => state.trackingSession.trackingActive
     );
+    const endDate = useSelector((state) => state.trackingSession.endDate);
     const locationError = useSelector((state) => state.trackingSession.error);
 
     const appState = React.useRef(RN.AppState.currentState); //track app state change
@@ -100,7 +101,7 @@ const MapScreen = ({ navigation }) => {
             nextAppState.match(/inactive|background/) //we were in in foreground and now we are going in background
         ) {
             const trackingSession = store.getState().trackingSession; //retrive the tracking info
-            if (trackingSession.startDate) {
+            if (trackingSession.startDate && !trackingSession.endDate) {
                 //there is a tracking session
                 trackingSession.backgroundAt = new Date(); //save the current date for later
                 const stateToSave = JSON.stringify(trackingSession);
@@ -122,7 +123,7 @@ const MapScreen = ({ navigation }) => {
 
             if (!foregroundGranted || !backgroundGranted) {
                 dispatch({
-                    type: RESET_STATE,
+                    type: RESET_TRACKING_SESSION,
                 });
                 await stopBackgroundUpdate();
                 setShowPermissionModal(true);
@@ -219,9 +220,6 @@ const MapScreen = ({ navigation }) => {
                             icon,
                         },
                     };
-
-                    console.log(payload);
-
                     dispatch({ type: UPDATE_TRACKING_INFO, payload });
                 }
             } catch (error) {
@@ -275,6 +273,11 @@ const MapScreen = ({ navigation }) => {
                 onDismiss={closePermissionModal}
                 transparent
             />
+            
+            <ModalSummary visible={endDate} onDismiss={() => {
+                const {currentLocation, heading, ...info} = store.getState().trackingSession
+                dispatch(sendTrackingInfo(info))
+            }}/>
         </RN.SafeAreaView>
     );
 };

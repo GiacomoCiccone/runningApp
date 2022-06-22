@@ -12,7 +12,7 @@ const TextLink = ({screen, params, text, ...props}) => {
     }
 
     return (
-            <Paper.Text onPress={navigate} style={{color: theme.colors.primary, fontFamily: "Rubik-Medium"}}>{text}</Paper.Text>
+            <Paper.Text onPress={navigate} style={{color: theme.colors.primary, fontFamily: "Rubik-Medium", fontSize: theme.fontSize.xs}}>{text}</Paper.Text>
     );
 }
 

@@ -18,6 +18,7 @@ import {
     RESET_PASSWORD_REQUEST,
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
+    RESET_UPDATED,
 } from "./";
 
 export const registerAction = (userInfo) => async (dispatch) => {
@@ -116,18 +117,29 @@ export const updateAction = (userInfo, userId, token) => async (dispatch) => {
     try {
         const { data } = await axios.put(
             `/api/users/${userId}${
-                userInfo.passwordOld ? "?password=true" : ""
+                userInfo.oldPassword ? "?password=true" : ""
             }`,
             userInfo,
             config
         );
 
-        dispatch({ type: UPDATE_SUCCESS, payload: data.data });
+        const updated = Object.keys(userInfo).filter(
+            (key) => key !== "oldPassword"
+        );
+
+        console.log(updated)
+        dispatch({ type: UPDATE_SUCCESS, payload: { ...data.data, updated } });
+
+        setTimeout(() => {
+            dispatch({ type: RESET_UPDATED });
+        }, 2000);
+        return true;
     } catch (error) {
         dispatch({
             type: UPDATE_FAIL,
             payload: error.response.data.error,
         });
+        return false;
     }
 };
 

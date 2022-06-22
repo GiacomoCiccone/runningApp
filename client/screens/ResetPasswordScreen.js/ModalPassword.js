@@ -27,7 +27,7 @@ const ModalPassword = ({visible, onDismiss, ...props }) => {
 
                 <Spacing size={"lg"} horizontal />
 
-                <Paper.Text style={{ color: theme.colors.grey }}>
+                <Paper.Text style={{ color: theme.colors.grey, fontSize: theme.fontSize.sm }}>
                     Abbiamo ripristinato la tua password. Utilizzala per accedere al tuo account
                 </Paper.Text>
 

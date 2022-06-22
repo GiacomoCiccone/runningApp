@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import * as Moti from "moti";
 import { useTheme } from "../../providers/theme.provider";
 import Spacing from "../../components/Spacing";
 import { FemaleGender, MaleGender } from "../../assets/images";

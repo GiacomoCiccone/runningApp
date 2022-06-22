@@ -38,7 +38,7 @@ const RegisterScreen = () => {
             registerFullName: "",
         },
     });
-    const userIsLoading = watch("registerPassword");
+    const registerPassword = watch("registerPassword");
 
     const [registerPasswordVisibility, setRegisterPasswordVisibility] =
         React.useState(true);
@@ -88,13 +88,13 @@ const RegisterScreen = () => {
                 >
                     <ControlledTextInput
                         control={control}
-                        // rules={{
-                        //     required: "Nome completo richiesto",
-                        //     pattern: {
-                        //         value: /^[a-zA-Z ]+$/,
-                        //         message: "Nome non valido",
-                        //     },
-                        // }}
+                        rules={{
+                            required: "Nome completo richiesto",
+                            pattern: {
+                                value: /^[a-zA-Z ]+$/,
+                                message: "Nome non valido",
+                            },
+                        }}
                         label="Nome completo"
                         name="registerFullName"
                         error={errors.registerFullName}
@@ -105,13 +105,13 @@ const RegisterScreen = () => {
                 <RN.View style={styles.inputWrapper}>
                     <ControlledTextInput
                         control={control}
-                        // rules={{
-                        //     required: "Email richiesta",
-                        //     pattern: {
-                        //         value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                        //         message: "Email non valida",
-                        //     },
-                        // }}
+                        rules={{
+                            required: "Email richiesta",
+                            pattern: {
+                                value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                message: "Email non valida",
+                            },
+                        }}
                         label="Email"
                         name="registerEmail"
                         error={errors.registerEmail}
@@ -121,13 +121,13 @@ const RegisterScreen = () => {
                 <RN.View style={styles.inputWrapper}>
                     <ControlledTextInput
                         control={control}
-                        // rules={{
-                        //     required: "Password richiesta",
-                        //     minLength: {
-                        //         value: 8,
-                        //         message: "Password troppo breve",
-                        //     },
-                        // }}
+                        rules={{
+                            required: "Password richiesta",
+                            minLength: {
+                                value: 8,
+                                message: "Password troppo breve",
+                            },
+                        }}
                         label="Password"
                         name="registerPassword"
                         right={
@@ -149,12 +149,12 @@ const RegisterScreen = () => {
                 <RN.View style={styles.inputWrapper}>
                     <ControlledTextInput
                         control={control}
-                        // rules={{
-                        //     required: "Conferma password richiesta",
-                        //     validate: (val) =>
-                        //         val === registerPassword ||
-                        //         "Le password non corrispondono",
-                        // }}
+                        rules={{
+                            required: "Conferma password richiesta",
+                            validate: (val) =>
+                                val === registerPassword ||
+                                "Le password non corrispondono",
+                        }}
                         label="Conferma password"
                         name="registerConfirmPassword"
                         right={
@@ -176,7 +176,7 @@ const RegisterScreen = () => {
                 <Spacing horizontal size="5xl" />
 
                 <ButtonSubmit
-                    loading={userIsLoading}
+                    loading={user.isLoading}
                     error={Object.keys(errors).length !== 0}
                     onPress={handleSubmit(onSubmit)}
                     label="Continua"
@@ -184,7 +184,7 @@ const RegisterScreen = () => {
 
                 <Spacing horizontal size="2xl" />
 
-                <Paper.Text style={{ color: theme.colors.placeholder }}>
+                <Paper.Text style={{ color: theme.colors.grey }}>
                     Hai già un account?{"  "}
                     <Paper.Text
                         style={{

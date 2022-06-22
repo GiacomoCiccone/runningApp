@@ -15,7 +15,7 @@ const SnackBar = ({ children, type, bottom, ...props }) => {
                 bottom: bottom || 0
             }}
         >
-            <Paper.Text style={{ color: "white" }}>{children}</Paper.Text>
+            <Paper.Text style={{ color: "white", fontSize: theme.fontSize.xs }}>{children}</Paper.Text>
         </Paper.Snackbar>
     );
 };

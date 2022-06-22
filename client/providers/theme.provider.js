@@ -1,14 +1,19 @@
 import * as React from "react";
 import { LightTheme, DarkTheme } from "../common/theme";
-import { useColorScheme } from 'react-native';
-import * as Font from 'expo-font';
-import * as NavigationBar from 'expo-navigation-bar';
+import { useColorScheme } from "react-native";
+import { StatusBar } from "react-native";
+import * as Font from "expo-font";
+import * as NavigationBar from "expo-navigation-bar";
+import { useSelector } from "react-redux";
 
 //create the context
 export const ThemeContext = React.createContext();
 
 //create the provider for this context
 export const ThemeProvider = ({ children }) => {
+    // Curent theme from preferences
+    const themePreference = useSelector((state) => state.preferences.theme);
+
     // Current Color Scheme
     const colorScheme = useColorScheme();
 
@@ -19,29 +24,47 @@ export const ThemeProvider = ({ children }) => {
 
     const loadFonts = async () => {
         await Font.loadAsync({
-          'Rubik-Bold': require('../assets/fonts/Rubik-Bold.ttf'),
-          'Rubik-Light': require('../assets/fonts/Rubik-Light.ttf'),
-          'Rubik-Medium': require('../assets/fonts/Rubik-Medium.ttf'),
-          'Rubik-Regular': require('../assets/fonts/Rubik-Regular.ttf')
+            "Rubik-Bold": require("../assets/fonts/Rubik-Bold.ttf"),
+            "Rubik-Light": require("../assets/fonts/Rubik-Light.ttf"),
+            "Rubik-Medium": require("../assets/fonts/Rubik-Medium.ttf"),
+            "Rubik-Regular": require("../assets/fonts/Rubik-Regular.ttf"),
         });
         setFontsLoaded(true);
-      }
+    };
 
     React.useEffect(() => {
-        loadFonts()
-    }, [])
+        loadFonts();
+    }, []);
 
     // Changing theme
     React.useEffect(() => {
-        setTheme(colorScheme === 'light' ? LightTheme : DarkTheme)
-        
-    }, [colorScheme]);
+        switch (themePreference) {
+            case "light":
+                setTheme(LightTheme);
+                break;
+            case "dark":
+                setTheme(DarkTheme);
+                break;
+            default:
+                setTheme(colorScheme === "light" ? LightTheme : DarkTheme);
+                break;
+        }
+    }, [themePreference]);
 
     React.useEffect(() => {
-        NavigationBar.setBackgroundColorAsync(theme.colors.background);
-        NavigationBar.setButtonStyleAsync(colorScheme === 'light' ? 'dark' : 'light');
-    }, [theme])
-    
+        const navigationBarButtonColor = theme.dark ? "light" : "dark";
+        const barStyle = theme.dark ? 'light-content' : 'dark-content';
+
+        (async () => {
+            await NavigationBar.setBackgroundColorAsync(theme.colors.background);
+            await NavigationBar.setButtonStyleAsync(navigationBarButtonColor);
+
+            StatusBar.setBarStyle(barStyle)
+            StatusBar.setBackgroundColor(theme.colors.background)
+        })()
+       
+    }, [theme]);
+
     return (
         <ThemeContext.Provider value={theme}>
             {fontsLoaded && children}

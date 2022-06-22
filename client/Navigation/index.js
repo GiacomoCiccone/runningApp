@@ -7,19 +7,20 @@ import { useSelector, useDispatch } from "react-redux";
 import AppNavigation from "./AppNavigation";
 import AuthNavigation from "./AuthNavigation";
 
-import { RESET_ERROR_USER } from "../actions";
+import { RESET_ERROR_USER, RESET_UPDATED } from "../actions";
 
 const Navigation = () => {
     const authToken = useSelector((state) => state.user.authToken);
 
     const dispatch = useDispatch()
 
-    React.useEffect(() => { //reset error user on first load
+    React.useEffect(() => { //reset error and updated user on first load
         dispatch({ type: RESET_ERROR_USER });
+        dispatch({type: RESET_UPDATED})
     }, []);
 
 
-    return !authToken ? <AppNavigation /> : <AuthNavigation />;
+    return authToken ? <AppNavigation /> : <AuthNavigation />;
 };
 
 export default Navigation;

@@ -323,7 +323,7 @@ const Picker = ({
                 />
                 <Paper.Text
                     style={{
-                        fontSize: theme.fontSize["xs"],
+                        fontSize: theme.fontSize.xs,
                         color: theme.colors.primary,
                     }}
                 >

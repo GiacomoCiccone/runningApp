@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-AsyncStorage.clear()
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// AsyncStorage.clear()
 
 import "react-native-gesture-handler";
 import "react-native-reanimated";
@@ -11,7 +11,6 @@ import * as Paper from "react-native-paper";
 
 //expo
 import * as ScreenOrientation from "expo-screen-orientation";
-import { StatusBar } from "expo-status-bar";
 
 //navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -26,7 +25,6 @@ import { ThemeContext, ThemeProvider } from "./providers/theme.provider";
 import Navigation from "./Navigation";
 
 export default function App() {
-
     React.useEffect(() => {
         (async () =>
             await ScreenOrientation.lockAsync(
@@ -37,32 +35,29 @@ export default function App() {
     return (
         <ReduxProvider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-            <ThemeProvider>
-                <ThemeContext.Consumer>
-                    {(theme) => (
-                        <RN.View
-                            style={[
-                                styles.containerUnderStatusBar,
-                                {
-                                    backgroundColor: theme.colors.background,
-                                },
-                            ]}
-                        >
-                            <Paper.Provider theme={theme}>
-                                <NavigationContainer
-                                    theme={theme}
-                                >
+                <ThemeProvider>
+                    <ThemeContext.Consumer>
+                        {(theme) => (
+                            <RN.View
+                                style={[
+                                    styles.containerUnderStatusBar,
+                                    {
+                                        backgroundColor:
+                                            theme.colors.background,
+                                    },
+                                ]}
+                            >
+                                <Paper.Provider theme={theme}>
+                                    <NavigationContainer theme={theme}>
+                                        <Navigation />
+                                    </NavigationContainer>
+                                </Paper.Provider>
 
-                                    <Navigation />
-
-                                </NavigationContainer>
-                            </Paper.Provider>
-
-                            <StatusBar style={theme.dark ? "light" : "dark"} />
-                        </RN.View>
-                    )}
-                </ThemeContext.Consumer>
-            </ThemeProvider>
+                                <RN.StatusBar animated />
+                            </RN.View>
+                        )}
+                    </ThemeContext.Consumer>
+                </ThemeProvider>
             </PersistGate>
         </ReduxProvider>
     );

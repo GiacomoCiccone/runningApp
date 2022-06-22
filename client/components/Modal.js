@@ -13,16 +13,15 @@ const Modal = ({
     children,
     visible,
     onDismiss,
+    style
 }) => {
     
     const theme = useTheme()
 
-    const hideModal = React.useCallback(() => setVisible(false), []);
-
 
     return (
         <Paper.Portal>
-        <Paper.Modal visible={visible} onDismiss={onDismiss} contentContainerStyle={{padding: theme.spacing['2xl'], paddingVertical: theme.spacing['4xl'], alignSelf: 'center', borderRadius: theme.roundness, backgroundColor: theme.colors.backgroundElevation}}>
+        <Paper.Modal visible={visible} onDismiss={onDismiss} contentContainerStyle={[{padding: theme.spacing['2xl'], paddingVertical: theme.spacing['4xl'], alignSelf: 'center', borderRadius: theme.roundness, backgroundColor: theme.colors.backgroundElevation}, style]}>
           {children}
         </Paper.Modal>
       </Paper.Portal>

@@ -118,13 +118,7 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
                 left={route.name === "Stats"}
                 right={route.name === "Profile"}
             >
-                <Moti.MotiView
-                    animate={{ scale: isFocused ? 1.07 : 1 }}
-                    transition={{
-                        type: "timing",
-                        delay: 100,
-                        duration: 100,
-                    }}
+                <RN.View
                     style={styles.contentWrapper}
                 >
                     {icon}
@@ -167,7 +161,7 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
                             </Paper.Text>
                         </RN.View>
                     )}
-                </Moti.MotiView>
+                </RN.View>
             </TouchableRipple>
         </RN.View>
     );

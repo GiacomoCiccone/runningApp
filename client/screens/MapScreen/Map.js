@@ -11,7 +11,6 @@ import UserMarker from "./UserMarker";
 
 import mapStyleLight from "../../common/MapStyle/mapStyleLight.json";
 import mapStyleDark from "../../common/MapStyle/mapStyleDark.json";
-import { Circle } from "react-native-svg";
 import CircleMarker from "./CircleMarker";
 
 const Map = ({

@@ -12,6 +12,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import TopBannerTextNormal from "./TopBannerTextNormal";
 import TopBannerTextBig from "./TopBannerTextBig";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import TopBannerModal from "./TopBannerModal";
 
 const HEIGHT_CONTAINER_1 = 200;
 const HEIGHT_CONTAINER_1_BIG_TEXT = 100;
@@ -20,14 +22,50 @@ const HEIGHT_CONTAINER_1_TOP = 40;
 const HEIGHT_CONTAINER_2 = 70;
 const ANIMATION_DURATION = 400;
 
+const modalInitialState = {
+    open: false,
+    modalTitle: "",
+    modalAction: null,
+    selected: null,
+};
+
+const OPEN_MODAL = "OPEN_MODAL";
+const CLOSE_MODAL = "CLOSE_MODAL";
+
+const modalReducer = (state, action) => {
+    switch (action.type) {
+        case OPEN_MODAL:
+            return action.payload;
+        case CLOSE_MODAL: {
+            return modalInitialState;
+        }
+        default:
+            return state;
+    }
+};
+
 const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
     const theme = useTheme();
+    const wheater = useSelector((state) => state.trackingSession.wheater);
+
+    const [selectedBig, setSelectedBig] = React.useState("time");
+    const [selectedLeftFullSize, setSelectedLeftFullSize] =
+        React.useState("calories");
+    const [selectedCenterFullSize, setSelectedCenterFullSize] =
+        React.useState("speed");
+    const [selectedRightFullSize, setSelectedRightFullSize] =
+        React.useState("distance");
+    const [selectedLeft, setSelectedLeft] = React.useState("calories");
+    const [selectedCenter, setSelectedCenter] = React.useState("time");
+    const [selectedRight, setSelectedRight] = React.useState("distance");
+    const [modalState, modalDispath] = React.useReducer(
+        modalReducer,
+        modalInitialState
+    );
 
     const setFullSizeTrue = React.useCallback(() => {
         setFullSize(true);
     }, []);
-
-    const wheater = useSelector(state => state.trackingSession.wheater);
 
     return (
         <>
@@ -52,17 +90,63 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                     >
                         <RN.View style={styles.textContainer}>
                             <TopBannerTextNormal
-                                label="Calorie"
-                                id="calories"
-                                unit="Kcal"
+                                onPress={() =>
+                                    modalDispath({
+                                        type: OPEN_MODAL,
+                                        payload: {
+                                            open: true,
+                                            modalTitle: "Secondo a sinistra",
+                                            selected: selectedLeft,
+                                            modalAction: (newVal) => {
+                                                setSelectedLeft(newVal);
+                                                modalDispath({
+                                                    type: CLOSE_MODAL,
+                                                });
+                                            },
+                                        },
+                                    })
+                                }
+                                id={selectedLeft}
                             />
 
-                            <TopBannerTextNormal label="Durata" id="time" />
+                            <TopBannerTextNormal
+                                onPress={() =>
+                                    modalDispath({
+                                        type: OPEN_MODAL,
+                                        payload: {
+                                            open: true,
+                                            modalTitle: "Secondo centrale",
+                                            selected: selectedCenter,
+                                            modalAction: (newVal) => {
+                                                setSelectedCenter(newVal);
+                                                modalDispath({
+                                                    type: CLOSE_MODAL,
+                                                });
+                                            },
+                                        },
+                                    })
+                                }
+                                id={selectedCenter}
+                            />
 
                             <TopBannerTextNormal
-                                label="Distanza"
-                                id="distance"
-                                unit="Km"
+                                onPress={() =>
+                                    modalDispath({
+                                        type: OPEN_MODAL,
+                                        payload: {
+                                            open: true,
+                                            modalTitle: "Secondo a destra",
+                                            selected: selectedRight,
+                                            modalAction: (newVal) => {
+                                                setSelectedRight(newVal);
+                                                modalDispath({
+                                                    type: CLOSE_MODAL,
+                                                });
+                                            },
+                                        },
+                                    })
+                                }
+                                id={selectedRight}
                             />
                         </RN.View>
                     </RN.View>
@@ -89,16 +173,36 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                 >
                     <RN.View style={[styles.topContainer1]}>
                         <RN.View
-                            style={{ flex: 1, marginLeft: theme.spacing.xl}}
+                            style={{ flex: 1, marginLeft: theme.spacing.xl }}
                         >
-                            {wheater &&
-                            <RN.View style={{ flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                            
-                            <RN.Image source={{uri: `http://openweathermap.org/img/wn/${wheater.icon}@2x.png`}} style={{width: 30, height: 30, resizeMode: 'contain'}}/>
-                            <Paper.Text style={{fontSize: theme.fontSize.xs, fontFamily: 'Rubik-Medium'}}>
-                                {wheater.temp}°
-                            </Paper.Text>
-                            </RN.View> }
+                            {wheater && (
+                                <RN.View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <RN.Image
+                                        source={{
+                                            uri: `http://openweathermap.org/img/wn/${wheater.icon}@2x.png`,
+                                        }}
+                                        style={{
+                                            width: 30,
+                                            height: 30,
+                                            resizeMode: "contain",
+                                        }}
+                                    />
+                                    <Paper.Text
+                                        style={{
+                                            fontSize: theme.fontSize.xs,
+                                            fontFamily: "Rubik-Medium",
+                                        }}
+                                    >
+                                        {wheater.temp}°
+                                    </Paper.Text>
+                                </RN.View>
+                            )}
                         </RN.View>
 
                         <RN.View style={{ flex: 1 }}></RN.View>
@@ -131,29 +235,84 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                     </RN.View>
 
                     <RN.View style={styles.bigTextContainer1}>
-                        <TopBannerTextBig label="Durata" id="time" />
+                        <TopBannerTextBig
+                            onPress={() =>
+                                modalDispath({
+                                    type: OPEN_MODAL,
+                                    payload: {
+                                        open: true,
+                                        modalTitle: "Principale",
+                                        selected: selectedBig,
+                                        modalAction: (newVal) => {
+                                            setSelectedBig(newVal);
+                                            modalDispath({ type: CLOSE_MODAL });
+                                        },
+                                    },
+                                })
+                            }
+                            id={selectedBig}
+                        />
                     </RN.View>
 
                     <RN.View style={styles.textContainer}>
                         <TopBannerTextNormal
-                            label="Calorie"
-                            id="calories"
-                            unit="Kcal"
+                            onPress={() =>
+                                modalDispath({
+                                    type: OPEN_MODAL,
+                                    payload: {
+                                        open: true,
+                                        modalTitle: "Primo a sinistra",
+                                        selected: selectedLeftFullSize,
+                                        modalAction: (newVal) => {
+                                            setSelectedLeftFullSize(newVal);
+                                            modalDispath({ type: CLOSE_MODAL });
+                                        },
+                                    },
+                                })
+                            }
+                            id={selectedLeftFullSize}
                         />
-
                         <TopBannerTextNormal
-                            label="Velocità"
-                            id="speed"
-                            unit="Km/h"
+                            onPress={() =>
+                                modalDispath({
+                                    type: OPEN_MODAL,
+                                    payload: {
+                                        open: true,
+                                        modalTitle: "Primo centrale",
+                                        selected: selectedCenterFullSize,
+                                        modalAction: (newVal) => {
+                                            setSelectedCenterFullSize(newVal);
+                                            modalDispath({ type: CLOSE_MODAL });
+                                        },
+                                    },
+                                })
+                            }
+                            id={selectedCenterFullSize}
                         />
-
                         <TopBannerTextNormal
-                            label="Distanza"
-                            id="distance"
-                            unit="Km"
+                            onPress={() =>
+                                modalDispath({
+                                    type: OPEN_MODAL,
+                                    payload: {
+                                        open: true,
+                                        modalTitle: "Primo a destra",
+                                        selected: selectedRightFullSize,
+                                        modalAction: (newVal) => {
+                                            setSelectedRightFullSize(newVal);
+                                            modalDispath({ type: CLOSE_MODAL });
+                                        },
+                                    },
+                                })
+                            }
+                            id={selectedRightFullSize}
                         />
                     </RN.View>
                 </RN.View>
+
+                <TopBannerModal
+                    state={modalState}
+                    onDismiss={() => modalDispath({ type: CLOSE_MODAL })}
+                />
             </Moti.MotiView>
         </>
     );

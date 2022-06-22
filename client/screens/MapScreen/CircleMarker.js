@@ -5,16 +5,26 @@ import { useTheme } from "../../providers/theme.provider";
 const MARKER_WIDTH = 25;
 
 const CircleMarker = ({ color }) => {
-
-    const theme = useTheme()
+    const theme = useTheme();
 
     return (
         <>
-        <RN.View style={[styles.markerWrapper, { backgroundColor: color || theme.colors.primary }]}>
-           
-        </RN.View>
-         <RN.View style={[styles.marker, { backgroundColor: color || theme.colors.primary, borderWidth: theme.border.default }]} />
-         </>
+            <RN.View
+                style={[
+                    styles.markerWrapper,
+                    { backgroundColor: color || theme.colors.primary },
+                ]}
+            ></RN.View>
+            <RN.View
+                style={[
+                    styles.marker,
+                    {
+                        backgroundColor: color || theme.colors.primary,
+                        borderWidth: theme.border.default,
+                    },
+                ]}
+            />
+        </>
     );
 };
 
@@ -26,7 +36,7 @@ const styles = RN.StyleSheet.create({
         position: "absolute",
         alignSelf: "center",
         top: MARKER_WIDTH / 2 - MARKER_WIDTH / 4,
-        borderColor: 'white'
+        borderColor: "white",
     },
     markerWrapper: {
         width: MARKER_WIDTH,

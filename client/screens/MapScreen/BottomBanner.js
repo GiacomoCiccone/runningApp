@@ -17,6 +17,7 @@ import {
     SET_TRACKING_ACTIVE,
     SET_TRACKING_INACTIVE,
     START_SESSION,
+    UPDATE_TRACKING_INFO,
 } from "../../actions";
 import SlideToUnlock from "./SlideToUnlock";
 import BottomBannerButton from "./BottomBannerButton";
@@ -54,14 +55,13 @@ const BottomBanner = ({
     );
     const dispatch = useDispatch();
 
-    
     const [unlocked, setUnlocked] = React.useState(false); //swipe button
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     //when the user press start must set active tracking true
     const onStartPress = React.useCallback(async () => {
         try {
-            //controlla prima i permessi e fa partire se non è ancora partito il background task
+            //check the permissions before...
             await requestPermissions();
             await startBackgroundUpdate();
             dispatch({ type: START_SESSION });
@@ -70,25 +70,27 @@ const BottomBanner = ({
         }
     }, []);
 
-    //when the user press start must set active tracking true
+    //when the user pause set tracking inactive
     const onPausePress = React.useCallback(() => {
         dispatch({ type: SET_TRACKING_INACTIVE });
     }, []);
 
-    //when the user press start must set active tracking true
+    //when the user press resume set tracking active
     const onResumePress = React.useCallback(() => {
         dispatch({ type: SET_TRACKING_ACTIVE });
     }, []);
 
-    //when the user press start must set active tracking true
-    const onStopPress = React.useCallback(() => {}, []);
+    //when the user press stop set the end date and inactive
+    const onStopPress = React.useCallback(() => {
+        dispatch({ type: UPDATE_TRACKING_INFO, payload: {endDate: new Date(), trackingActive: false} });
+    }, []);
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {
             setUnlocked(false);
-        }, ANIMATION_DURATION)
-        
-        return () => clearTimeout(timeout)
+        }, ANIMATION_DURATION);
+
+        return () => clearTimeout(timeout);
     }, [fullSize]);
 
     return (
@@ -124,49 +126,53 @@ const BottomBanner = ({
                                 >
                                     <Moti.AnimatePresence exitBeforeEnter>
                                         {trackingActive && (
-                                                <BottomBannerButton
-                                                    style={[
-                                                        styles.controlButton,
-                                                        {
-                                                            borderRadius:
-                                                                theme.rounded
-                                                                    .full,
-                                                                    borderTopRightRadius: 0, borderBottomRightRadius: 0,
-                                                                    transform: [{translateX: 10}]
-                                                        },
-                                                    ]}
-                                                    onPress={onPausePress}
-                                                    backgroundColor={
-                                                        theme.colors["warning"]
-                                                    }
-                                                    labelColor="white"
-                                                    icon="pause-circle"
-                                                >
-                                                    Pausa
-                                                </BottomBannerButton>
+                                            <BottomBannerButton
+                                                style={[
+                                                    styles.controlButton,
+                                                    {
+                                                        borderRadius:
+                                                            theme.rounded.full,
+                                                        borderTopRightRadius: 0,
+                                                        borderBottomRightRadius: 0,
+                                                        transform: [
+                                                            { translateX: 10 },
+                                                        ],
+                                                    },
+                                                ]}
+                                                onPress={onPausePress}
+                                                backgroundColor={
+                                                    theme.colors["warning"]
+                                                }
+                                                labelColor="white"
+                                                icon="pause-circle"
+                                            >
+                                                Pausa
+                                            </BottomBannerButton>
                                         )}
 
                                         {!trackingActive && (
-                                                <BottomBannerButton
-                                                    style={[
-                                                        styles.controlButton,
-                                                        {
-                                                            borderRadius:
-                                                                theme.rounded
-                                                                    .full,
-                                                                    borderTopRightRadius: 0, borderBottomRightRadius: 0,
-                                                                    transform: [{translateX: 10}]
-                                                        },
-                                                    ]}
-                                                    onPress={onResumePress}
-                                                    backgroundColor={
-                                                        theme.colors["success"]
-                                                    }
-                                                    labelColor="white"
-                                                    icon="play-circle"
-                                                >
-                                                    Riprendi
-                                                </BottomBannerButton>
+                                            <BottomBannerButton
+                                                style={[
+                                                    styles.controlButton,
+                                                    {
+                                                        borderRadius:
+                                                            theme.rounded.full,
+                                                        borderTopRightRadius: 0,
+                                                        borderBottomRightRadius: 0,
+                                                        transform: [
+                                                            { translateX: 10 },
+                                                        ],
+                                                    },
+                                                ]}
+                                                onPress={onResumePress}
+                                                backgroundColor={
+                                                    theme.colors["success"]
+                                                }
+                                                labelColor="white"
+                                                icon="play-circle"
+                                            >
+                                                Riprendi
+                                            </BottomBannerButton>
                                         )}
                                     </Moti.AnimatePresence>
 
@@ -177,7 +183,7 @@ const BottomBanner = ({
                                             justifyContent: "center",
                                             borderRadius: theme.rounded.full,
                                             zIndex: 100,
-                                            transform: [{scale: 1.1}]
+                                            transform: [{ scale: 1.1 }],
                                         }}
                                         onPress={() => setUnlocked(false)}
                                         backgroundColor={
@@ -195,8 +201,11 @@ const BottomBanner = ({
                                             {
                                                 borderRadius:
                                                     theme.rounded.full,
-                                                    borderTopLeftRadius: 0, borderBottomLeftRadius: 0,
-                                                    transform: [{translateX: -10}]
+                                                borderTopLeftRadius: 0,
+                                                borderBottomLeftRadius: 0,
+                                                transform: [
+                                                    { translateX: -10 },
+                                                ],
                                             },
                                         ]}
                                         backgroundColor={theme.colors["error"]}
