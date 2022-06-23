@@ -19,6 +19,9 @@ import {
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
     RESET_UPDATED,
+    STATISTICS_FAIL,
+    STATISTICS_REQUEST,
+    STATISTICS_SUCCESS,
 } from "./";
 
 export const registerAction = (userInfo) => async (dispatch) => {
@@ -127,7 +130,6 @@ export const updateAction = (userInfo, userId, token) => async (dispatch) => {
             (key) => key !== "oldPassword"
         );
 
-        console.log(updated)
         dispatch({ type: UPDATE_SUCCESS, payload: { ...data.data, updated } });
 
         setTimeout(() => {
@@ -161,5 +163,25 @@ export const deleteAction = (userId, token) => async (dispatch) => {
             type: DELETE_FAIL,
             payload: error.response.data.error,
         });
+    }
+};
+
+
+export const getStats = (userId, token) => async (dispatch) => {
+    dispatch({ type: STATISTICS_REQUEST, payload: {} });
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+    try {
+        const { data } = await axios.get(`/api/users/stats/${userId}`, config);
+
+        dispatch({ type: STATISTICS_SUCCESS, payload: { ...data.data } });
+
+    } catch (error) {
+        console.log(error)
+        dispatch({ type: STATISTICS_FAIL, payload: error.response.data.error });
     }
 };

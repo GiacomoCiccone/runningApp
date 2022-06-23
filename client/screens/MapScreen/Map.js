@@ -40,8 +40,12 @@ const Map = ({
         setMapReady(true);
     }, []);
 
+    React.useEffect(() => {
+        if(!currentLocation) setMapReady(false)
+    }, [currentLocation])
+
     return (
-        <>
+        <RN.View style={styles.mapContainer}>
             {currentLocation ? (
                 <MapView
                     initialRegion={{
@@ -60,6 +64,7 @@ const Map = ({
                               }
                             : null
                     }
+                    style={styles.map}
                     showsCompass={false}
                     showsMyLocationButton={false}
                     loadingEnabled
@@ -69,8 +74,7 @@ const Map = ({
                     onPress={setFullSizeFalse}
                     onTouchStart={() => setCenterToLocation(false)}
                     customMapStyle={theme.dark ? mapStyleDark : mapStyleLight}
-                    style={styles.map}
-                    provider="google"
+                    provider={ReactMap.PROVIDER_GOOGLE}
                     mapType={mapType}
                     rotateEnabled={false}
                 >
@@ -80,8 +84,9 @@ const Map = ({
                                 x: 0.5,
                                 y: 0.5,
                             }}
+                            tappable={false}
                             rotation={heading}
-                            coordinate={currentLocation}
+                            coordinate={{latitude: currentLocation.latitude, longitude: currentLocation.longitude}}
                         >
                             <UserMarker />
                         </ReactMap.Marker>
@@ -125,14 +130,18 @@ const Map = ({
                                 <ReactMap.Marker
                                     anchor={{ x: 0.5, y: 0.5 }}
                                     coordinate={coordinateStart}
+                                    tappable={false}
+                                    tracksViewChanges={!mapReady}
                                 >
                                     <CircleMarker />
                                 </ReactMap.Marker>
 
                                 {numOfPauses > i && (
                                     <ReactMap.Marker
+                                        tracksViewChanges={!mapReady}
                                         anchor={{ x: 0.5, y: 0.5 }}
                                         coordinate={coordinateEnd}
+                                        tappable={false}
                                     >
                                         <CircleMarker />
                                     </ReactMap.Marker>
@@ -149,16 +158,19 @@ const Map = ({
                     ]}
                 ></RN.View>
             )}
-        </>
+        </RN.View>
     );
 };
 
 const styles = RN.StyleSheet.create({
-    map: {
+    mapContainer: {
         width: "100%",
         height: "110%",
         position: "absolute",
         bottom: "-10%",
+    },
+    map: {
+        flex: 1
     },
 });
 

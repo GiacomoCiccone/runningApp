@@ -38,13 +38,13 @@ const AppNavigation = () => {
                 headerShown: false,
                 lazy: true, //render only when pressed,
             }}
-            backBehavior={!startDate ? 'history' : 'none'}
+            backBehavior='history'
         >
-            <Tab.Screen name="Stats" component={StatsScreen} options={{tabBarLabel: 'Progressi'}} />
+            {!startDate && <Tab.Screen name="Stats" component={StatsScreen} options={{tabBarLabel: 'Progressi'}} />}
 
             <Tab.Screen name="Map" component={MapScreen} options={{tabBarLabel: 'Attività'}} />
 
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{tabBarLabel: 'Profilo'}} />
+            {!startDate && <Tab.Screen name="Profile" component={ProfileScreen} options={{tabBarLabel: 'Profilo'}} />}
         </Tab.Navigator>
     );
 };

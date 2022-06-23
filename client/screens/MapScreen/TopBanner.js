@@ -46,7 +46,7 @@ const modalReducer = (state, action) => {
 
 const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
     const theme = useTheme();
-    const wheater = useSelector((state) => state.trackingSession.wheater);
+    const weather = useSelector((state) => state.trackingSession.weather);
 
     const [selectedBig, setSelectedBig] = React.useState("time");
     const [selectedLeftFullSize, setSelectedLeftFullSize] =
@@ -175,7 +175,7 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                         <RN.View
                             style={{ flex: 1, marginLeft: theme.spacing.xl }}
                         >
-                            {wheater && (
+                            {weather && (
                                 <RN.View
                                     style={{
                                         flex: 1,
@@ -185,7 +185,7 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                                 >
                                     <RN.Image
                                         source={{
-                                            uri: `http://openweathermap.org/img/wn/${wheater.icon}@2x.png`,
+                                            uri: `http://openweathermap.org/img/wn/${weather.icon}@2x.png`,
                                         }}
                                         style={{
                                             width: 30,
@@ -199,7 +199,7 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                                             fontFamily: "Rubik-Medium",
                                         }}
                                     >
-                                        {wheater.temp}°
+                                        {weather.temp}°
                                     </Paper.Text>
                                 </RN.View>
                             )}

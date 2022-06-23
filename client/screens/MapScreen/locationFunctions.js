@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage/";
 
 import { store } from '../../store/'
 import { UPDATE_TRACKING_INFO } from "../../actions";
-import { calcCalories, calcDistance, kalman } from "../../utils";
+import { calcCalories, calcDistance } from "../../utils";
 
 const BACKGROUND_LOCATION_TASK = "BACKGROUND_LOCATION_TASK";
 export const TRACKING_SESSION_KEY = "TRACKING_SESSION_KEY"
@@ -54,12 +54,14 @@ export const startBackgroundUpdate = async () => {
         activityType: Location.ActivityType.Fitness,
         accuracy: Location.Accuracy.BestForNavigation,
         showsBackgroundLocationIndicator: true,
-        timeInterval: 1000,
+        deferredUpdatesInterval: 1000,
         foregroundService: {
             notificationTitle: "Running App",
             notificationBody: "Tracciamento attività fisica in corso",
         },
     });
+
+    console.log("Tracking started")
 };
 
     
@@ -114,6 +116,8 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
                 const speed = speedMeterSeconds * 3.6 //from m/s to km/s
                 const pace = speed > 0 ? 60 / speed : 0  // m / km
                 const averagePace = averageSpeed > 0 ? 60 / averageSpeed : 0
+                const maxSpeed = speed > trackingState.maxSpeed ? speed : trackingState.maxSpeed
+                const currentLocation = location;
                 let history = trackingState.history;
                 if(history[trackingState.numOfPauses]?.length > 0) {
                     history[trackingState.numOfPauses].push(location)
@@ -121,18 +125,17 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
                     history[trackingState.numOfPauses] = [location]
                 }
                 const payload = {
-                    location: kalman(location, lastLocation === location ? null : location),
                     history,
                     altitude,
                     speed,
                     distance,
                     averageSpeed,
-                    currentLocation: location,
+                    currentLocation,
                     calories,
                     altitude,
                     pace,
                     averagePace,
-                    maxSpeed: speed > trackingState.maxSpeed ? speed : trackingState.maxSpeed
+                    maxSpeed 
                 }
                 store.dispatch({type: UPDATE_TRACKING_INFO, payload})
             }
@@ -148,6 +151,8 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
                 const speed = speedMeterSeconds * 3.6 //from m/s to km/s
                 const pace = speed > 0 ? 60 / speed : 0  // m / km
                 const averagePace = averageSpeed > 0 ? 60 / averageSpeed : 0
+                const maxSpeed = speed > trackingState.maxSpeed ? speed : trackingState.maxSpeed
+                const currentLocation = location;
                 let history = trackingState.history;
                 if(history[trackingState.numOfPauses]?.length > 0) {
                     history[trackingState.numOfPauses].push(location)
@@ -156,18 +161,17 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
                 }
                 const payload = {
                     ...trackingState,
-                    location: kalman(location, lastLocation === location ? null : location),
                     history,
                     altitude,
                     speed,
                     distance,
                     averageSpeed,
-                    currentLocation: location,
+                    currentLocation,
                     calories,
                     altitude,
                     pace,
                     averagePace,
-                    maxSpeed: speed > trackingState.maxSpeed ? speed : trackingState.maxSpeed
+                    maxSpeed
                 }
     
                 await AsyncStorage.setItem(TRACKING_SESSION_KEY, JSON.stringify(payload));

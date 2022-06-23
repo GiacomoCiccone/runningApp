@@ -29,12 +29,14 @@ const errorHandler = (err, req, res, next) => {
       .join(", ");
     error = new ErrorResponse(message, 400);
   }
-
+  
   //altrimenti e' un errore del server
   res.status(error.statusCode || 500).json({
     success: false,
     error: error.message || "Server Error",
   });
+
+  console.log(error.message)
 };
 
 module.exports = errorHandler;

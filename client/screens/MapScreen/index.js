@@ -36,6 +36,7 @@ const MapScreen = ({ navigation }) => {
     const trackingActive = useSelector(
         (state) => state.trackingSession.trackingActive
     );
+    const userId = useSelector((state) => state.user.userInfo._id)
     const endDate = useSelector((state) => state.trackingSession.endDate);
     const locationError = useSelector((state) => state.trackingSession.error);
 
@@ -65,7 +66,7 @@ const MapScreen = ({ navigation }) => {
         dispatch({ type: RESET_LOCATION_ERROR });
     }, []);
 
-    const handleFromBackgroundToForeground = async () => {
+    const retriveSavedInformation = async () => {
         const trackingSessionInStorage = await AsyncStorage.getItem(
             TRACKING_SESSION_KEY
         );
@@ -86,6 +87,9 @@ const MapScreen = ({ navigation }) => {
             });
 
             await AsyncStorage.removeItem(TRACKING_SESSION_KEY);
+        } else {    //else start the background update
+            await requestPermissions();
+            await startBackgroundUpdate()
         }
     };
 
@@ -95,14 +99,13 @@ const MapScreen = ({ navigation }) => {
             appState.current.match(/inactive|background/) && //we were in background and now active
             nextAppState === "active"
         ) {
-            await handleFromBackgroundToForeground();
+            await retriveSavedInformation();
         } else if (
             appState.current === "active" &&
             nextAppState.match(/inactive|background/) //we were in in foreground and now we are going in background
         ) {
             const trackingSession = store.getState().trackingSession; //retrive the tracking info
-            if (trackingSession.startDate && !trackingSession.endDate) {
-                //there is a tracking session
+            if (trackingSession.startDate) { //there is a tracking session
                 trackingSession.backgroundAt = new Date(); //save the current date for later
                 const stateToSave = JSON.stringify(trackingSession);
                 await AsyncStorage.setItem(TRACKING_SESSION_KEY, stateToSave); //save info in the storage
@@ -116,27 +119,29 @@ const MapScreen = ({ navigation }) => {
     //on first render show a modal before asking for the permissions, if not already granted
     React.useEffect(() => {
         (async () => {
-            const { granted: foregroundGranted } =
-                await Location.getBackgroundPermissionsAsync();
-            const { granted: backgroundGranted } =
-                await Location.getBackgroundPermissionsAsync();
 
-            if (!foregroundGranted || !backgroundGranted) {
+            try {
+                await requestPermissions()
+                await startBackgroundUpdate();
+
+            } catch (error) {
                 dispatch({
                     type: RESET_TRACKING_SESSION,
                 });
                 await stopBackgroundUpdate();
                 setShowPermissionModal(true);
-            } else {
-                await startBackgroundUpdate();
             }
+            const { granted: foregroundGranted } =
+                await Location.getBackgroundPermissionsAsync();
+            const { granted: backgroundGranted } =
+                await Location.getBackgroundPermissionsAsync();
         })();
     }, []);
 
-    //handle the return from the background in the first render
+    //handle the same way as the return from the background in the first render
     React.useEffect(() => {
         (async () => {
-            await handleFromBackgroundToForeground();
+            await retriveSavedInformation();
         })();
     }, []);
 
@@ -201,7 +206,7 @@ const MapScreen = ({ navigation }) => {
         return () => subscription.remove();
     }, []);
 
-    //get the wheater every 30 seconds (max 60 per minute free api)
+    //get the weather every 30 seconds (max 60 per minute free api)
     React.useEffect(() => {
         const getWeather = async () => {
             try {
@@ -212,11 +217,10 @@ const MapScreen = ({ navigation }) => {
                         `https://api.openweathermap.org/data/2.5/weather?lat=${currentLocation.latitude}&lon=${currentLocation.longitude}&appid=${WHEATER_API_KEY}&units=metric`
                     );
                     const { temp } = data.main;
-                    const { main, icon } = data.weather[0];
+                    const { icon } = data.weather[0];
                     const payload = {
-                        wheater: {
+                        weather: {
                             temp,
-                            main,
                             icon,
                         },
                     };
@@ -273,11 +277,35 @@ const MapScreen = ({ navigation }) => {
                 onDismiss={closePermissionModal}
                 transparent
             />
-            
-            <ModalSummary visible={endDate} onDismiss={() => {
-                const {currentLocation, heading, ...info} = store.getState().trackingSession
-                dispatch(sendTrackingInfo(info))
-            }}/>
+
+            <ModalSummary
+                visible={endDate}
+                onDismiss={() => {
+                    const {
+                        currentLocation,
+                        heading,
+                        error,
+                        numOfPauses,
+                        trackingActive,
+                        pace,
+                        speed,
+                        altitude,
+                        ...info
+                    } = store.getState().trackingSession;   //send only useful information
+                    const body = {
+                        ...info,
+                        history: info.history.map(loc => {
+                            return {
+                                latitude: loc.latitude,
+                                longitude: loc.longitude
+                            }
+                        }),
+                        user: userId
+                    }
+
+                    dispatch(sendTrackingInfo(body));
+                }}
+            />
         </RN.SafeAreaView>
     );
 };

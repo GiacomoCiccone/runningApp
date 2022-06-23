@@ -18,9 +18,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get("/test", (req, res, next) => {
+    res.send("<h1>Funziona</h1>")
+})
+
 //redirect verso routers
 app.use("/api/auth", require("./routers/auth")); //tutte le richieste ad /api/auth vengono mandate a /routers/auth
 app.use("/api/users", require("./routers/users"));
+app.use("/api/trackingSessions", require("./routers/trackingSessions"));
 
 //L'errorHandler deve essere l'ultimo middleware
 app.use(errorHandler);

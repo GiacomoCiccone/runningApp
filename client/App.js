@@ -66,6 +66,5 @@ export default function App() {
 const styles = RN.StyleSheet.create({
     containerUnderStatusBar: {
         flex: 1,
-        paddingTop: RN.StatusBar.currentHeight,
     },
 });

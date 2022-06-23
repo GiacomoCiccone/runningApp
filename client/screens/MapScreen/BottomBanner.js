@@ -85,6 +85,7 @@ const BottomBanner = ({
         dispatch({ type: UPDATE_TRACKING_INFO, payload: {endDate: new Date(), trackingActive: false} });
     }, []);
 
+    //set locked every time fullsize change, but after the animation
     React.useEffect(() => {
         const timeout = setTimeout(() => {
             setUnlocked(false);

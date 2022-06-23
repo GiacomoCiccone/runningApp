@@ -1,9 +1,12 @@
 const express = require("express");
-//permette di creare percorsi di route modulari
+const mongoose = require("mongoose");
 var router = express.Router();
 const { protect } = require("../middleware/auth");
 const Users = require("../models/Users");
+const TrackingSessions = require("../models/TrackingSessions.js");
 const ErrorResponse = require("../utils/errorResponse");
+const UsersRecords = require("../models/UsersRecords");
+const getPreviousSunday = require("../utils/helpers");
 
 //CRUD
 
@@ -44,7 +47,10 @@ router.route("/:id").put(protect, async (req, res, next) => {
 
                     if (!isMatch) {
                         return next(
-                            new ErrorResponse("Vecchia password non corretta", 404)
+                            new ErrorResponse(
+                                "Vecchia password non corretta",
+                                404
+                            )
                         );
                     }
 
@@ -94,7 +100,62 @@ router.route("/:id").delete(protect, async (req, res, next) => {
     }
 }); //da proteggere
 
-//others
+//statistics about calories and distance in this week + records
+router.route("/stats/:id").get(protect, async (req, res, next) => {
+    if (req.userInfo._id == req.params.id) {
+        try {
+            const lastSunday = getPreviousSunday();
 
-//statistiche
+            const trackingInThisWeek = await TrackingSessions.aggregate([
+                {
+                    $match: {
+                        user: mongoose.Types.ObjectId(req.params.id),
+                        startDate: { $gte: lastSunday },
+                    },
+                }, //get all the tracking session in this week since sunday of this user
+
+                {
+                    $project: {
+                        // Change document with date to a value just for the day
+                        day: {
+                            $dayOfWeek: "$startDate",
+                        },
+                        calories: 1,
+                        distance: 1,
+                    },
+                },
+                {
+                    $group: {
+                        //count for each day the distance and the calories
+                        _id: "$day",
+                        countCalories: { $sum: "$calories" },
+                        countDistance: { $sum: "$distance" },
+                    },
+                },
+                { $sort: { _id: 1 } },
+            ]);
+
+            const userRecords = await UsersRecords.findOne({
+                user: mongoose.Types.ObjectId(req.params.id),
+            });
+
+            const data = {
+                trackingStatistics: trackingInThisWeek,
+                userRecords: userRecords._doc,
+            };
+
+            res.status(200).json({
+                success: true,
+                data,
+            });
+        } catch (error) {
+            next(error);
+        }
+    } else {
+        return next(
+            new ErrorResponse("Puoi modificare solo il tuo account", 403)
+        );
+    }
+}); //da proteggere
+
 module.exports = router;
