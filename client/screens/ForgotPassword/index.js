@@ -172,6 +172,9 @@ const styles = RN.StyleSheet.create({
     inputWrapper: {
         width: "100%",
     },
+    progressBar: {
+        position: 'absolute'
+    },
 });
 
 export default ForgotPasswordScreen;

@@ -11,7 +11,7 @@ const middlewares = [thunk];
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  blacklist: ['trackingSession', 'statistics']
+  blacklist: ['trackingSession', 'statistics', 'history']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

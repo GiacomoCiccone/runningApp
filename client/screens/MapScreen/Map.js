@@ -156,7 +156,7 @@ const Map = ({
                         styles.map,
                         { backgroundColor: theme.colors.background },
                     ]}
-                ></RN.View>
+                />
             )}
         </RN.View>
     );

@@ -177,6 +177,9 @@ const styles = RN.StyleSheet.create({
     safeContainer: {
         flex: 1,
     },
+    progressBar: {
+        position: 'absolute'
+    },
 });
 
 export default Main;

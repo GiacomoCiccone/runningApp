@@ -11,18 +11,27 @@ const ErrorResponse = require("../utils/errorResponse");
 //get all by user id
 router.route("/:id").get(protect, async (req, res, next) => {
     if (req.userInfo._id == req.params.id) {
-        const page = parseInt(req.params.page);
+        const page = parseInt(req.query.page);
         try {
-            //
-            let trackingSessions = await TrackingSessions.find({user: mongoose.Types.ObjectId(req.params.id)})
-            .sort("endDate")
-            .skip(page * 10)
-            .limit(10);
+            
+            const trackingSessions = await TrackingSessions.find({user: mongoose.Types.ObjectId(req.params.id)})
+            .populate('history')
+            .sort({startDate: -1})
+            .skip(page * 20)
+            .limit(20);
+
+            if(trackingSessions.length === 0)
+
+            return res.status(404).json({
+                data: {
+                    finished: true
+                }
+            })
             
             res.status(200).json({
                 success: true,
                 data: {
-                    trackingSessions: trackingSessions._doc,
+                    history: trackingSessions,
                 },
             });
         } catch (error) {

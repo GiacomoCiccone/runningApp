@@ -39,12 +39,7 @@ const TrackingSessionSchema = new mongoose.Schema(
             required: [true, "Ritmo medio richiesto"],
         },
         history: {
-            type: [
-                {
-                    latitude: Number,
-                    longitude: Number,
-                },
-            ],
+            type: [[]],
             required: [true, "Cronologia corsa richiesta"],
         },
         user: {

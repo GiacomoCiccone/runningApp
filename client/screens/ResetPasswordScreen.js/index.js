@@ -280,6 +280,9 @@ const styles = RN.StyleSheet.create({
         width: "100%",
         minHeight: 450,
     },
+    progressBar: {
+        position: 'absolute'
+    },
 });
 
 export default ResetPasswordScreen;

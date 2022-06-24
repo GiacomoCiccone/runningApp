@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 const ProfileScreen = () => {
     return (
         <Stack.Navigator
-            initialRouteName="UserAuth"
+            initialRouteName="MainProfile"
             screenOptions={{
                 headerShown: false,
             }}

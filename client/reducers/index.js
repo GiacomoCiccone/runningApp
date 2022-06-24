@@ -1,5 +1,6 @@
 //qui vanno messi i reducers
 import { combineReducers } from "redux";
+import historyReducer from "./historyReducer";
 import preferencesReducer from "./preferencesReducer";
 import statisticsReducer from "./statisticsReducer";
 import trackingSessionReducer from "./trackingSessionReducer";
@@ -10,4 +11,5 @@ export default combineReducers({
     trackingSession: trackingSessionReducer,
     preferences: preferencesReducer,
     statistics: statisticsReducer,
+    history: historyReducer,
 });

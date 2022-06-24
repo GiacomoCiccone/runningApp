@@ -34,7 +34,7 @@ const BMI = () => {
                         position: "absolute",
                         height: "100%",
                         width: 6,
-                        backgroundColor: theme.colors.text,
+                        backgroundColor: theme.colors.primary,
                         left: `${(Math.min(BMI, 40) / 40) * 100}%`,
                         transform: [{translateX: -4}]
                     }}

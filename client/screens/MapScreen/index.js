@@ -36,7 +36,7 @@ const MapScreen = ({ navigation }) => {
     const trackingActive = useSelector(
         (state) => state.trackingSession.trackingActive
     );
-    const userId = useSelector((state) => state.user.userInfo._id)
+    const userId = useSelector((state) => state.user.userInfo._id);
     const endDate = useSelector((state) => state.trackingSession.endDate);
     const locationError = useSelector((state) => state.trackingSession.error);
 
@@ -87,9 +87,10 @@ const MapScreen = ({ navigation }) => {
             });
 
             await AsyncStorage.removeItem(TRACKING_SESSION_KEY);
-        } else {    //else start the background update
+        } else {
+            //else start the background update
             await requestPermissions();
-            await startBackgroundUpdate()
+            await startBackgroundUpdate();
         }
     };
 
@@ -105,7 +106,8 @@ const MapScreen = ({ navigation }) => {
             nextAppState.match(/inactive|background/) //we were in in foreground and now we are going in background
         ) {
             const trackingSession = store.getState().trackingSession; //retrive the tracking info
-            if (trackingSession.startDate) { //there is a tracking session
+            if (trackingSession.startDate) {
+                //there is a tracking session
                 trackingSession.backgroundAt = new Date(); //save the current date for later
                 const stateToSave = JSON.stringify(trackingSession);
                 await AsyncStorage.setItem(TRACKING_SESSION_KEY, stateToSave); //save info in the storage
@@ -119,11 +121,9 @@ const MapScreen = ({ navigation }) => {
     //on first render show a modal before asking for the permissions, if not already granted
     React.useEffect(() => {
         (async () => {
-
             try {
-                await requestPermissions()
+                await requestPermissions();
                 await startBackgroundUpdate();
-
             } catch (error) {
                 dispatch({
                     type: RESET_TRACKING_SESSION,
@@ -291,17 +291,19 @@ const MapScreen = ({ navigation }) => {
                         speed,
                         altitude,
                         ...info
-                    } = store.getState().trackingSession;   //send only useful information
+                    } = store.getState().trackingSession; //send only useful information
                     const body = {
                         ...info,
-                        history: info.history.map(loc => {
-                            return {
-                                latitude: loc.latitude,
-                                longitude: loc.longitude
-                            }
-                        }),
-                        user: userId
-                    }
+                        history: info.history.map((subHistory) =>
+                            subHistory.map((loc) => {
+                                return {
+                                    latitude: loc.latitude,
+                                    longitude: loc.longitude,
+                                };
+                            })
+                        ),
+                        user: userId,
+                    };
 
                     dispatch(sendTrackingInfo(body));
                 }}

@@ -141,7 +141,7 @@ router.route("/stats/:id").get(protect, async (req, res, next) => {
 
             const data = {
                 trackingStatistics: trackingInThisWeek,
-                userRecords: userRecords._doc,
+                userRecords: userRecords?._doc,
             };
 
             res.status(200).json({
