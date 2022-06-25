@@ -1,12 +1,9 @@
 import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import { BarChart } from "react-native-chart-kit";
 import { useSelector } from "react-redux";
-import { useTheme } from "../../providers/theme.provider";
-import { hexToRgbA } from "../../utils";
 import Spacing from "../../components/Spacing";
-import { CHART_LABELS } from "../../utils/constants";
+import { useTheme } from "../../providers/theme.provider";
 import Chart from "./Chart";
 import ChartIndicator from "./ChartIndicator";
 

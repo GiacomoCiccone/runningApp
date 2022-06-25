@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as RN from 'react-native'
+import * as RN from 'react-native';
 import { useTheme } from "../../providers/theme.provider";
 
 const ChartIndicator = React.memo(({ scrollX, inputRange, outputRange }) => {

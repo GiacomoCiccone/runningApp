@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as RN from "react-native";
-import { useTheme } from "../../providers/theme.provider";
+import { useTheme } from "../providers/theme.provider";
 
 const MARKER_WIDTH = 25;
 

@@ -1,9 +1,9 @@
-import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
 
 import { useTheme } from "../providers/theme.provider";
 
+// Custom button with ripple effect
 const TouchableRipple = ({ rippleColor, left, right, children, ...props }) => {
     const theme = useTheme()
 

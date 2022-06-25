@@ -1,6 +1,6 @@
+import * as Moti from "moti";
 import * as React from "react";
 import * as RN from "react-native";
-import * as Moti from "moti";
 import * as Paper from "react-native-paper";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -11,17 +11,17 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useTheme } from "../../providers/theme.provider";
 
-import { requestPermissions, startBackgroundUpdate } from "./locationFunctions";
+import TouchableRipple from "../../components/TouchableRipple";
 import {
     LOCATION_ERROR,
     SET_TRACKING_ACTIVE,
     SET_TRACKING_INACTIVE,
     START_SESSION,
     UPDATE_TRACKING_INFO,
-} from "../../actions";
-import SlideToUnlock from "./SlideToUnlock";
+} from "../../redux/actions";
 import BottomBannerButton from "./BottomBannerButton";
-import TouchableRipple from "../../components/TouchableRipple";
+import { requestPermissions, startBackgroundUpdate } from "./locationFunctions";
+import SlideToUnlock from "./SlideToUnlock";
 
 const ANIMATION_DURATION = 400;
 
@@ -82,7 +82,10 @@ const BottomBanner = ({
 
     //when the user press stop set the end date and inactive
     const onStopPress = React.useCallback(() => {
-        dispatch({ type: UPDATE_TRACKING_INFO, payload: {endDate: new Date(), trackingActive: false} });
+        dispatch({
+            type: UPDATE_TRACKING_INFO,
+            payload: { endDate: new Date(), trackingActive: false },
+        });
     }, []);
 
     //set locked every time fullsize change, but after the animation

@@ -1,18 +1,18 @@
+import { useFocusEffect } from "@react-navigation/native";
 import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
-import { RESET_STATISTICS_ERROR } from "../../actions";
+import SnackBar from "../../components/SnackBar";
 import Spacing from "../../components/Spacing";
 import { useTheme } from "../../providers/theme.provider";
-import StatsContainer from "./StatsContainer";
+import { RESET_STATISTICS_ERROR } from "../../redux/actions";
+import { getStats } from "../../redux/actions/userActions";
 import BMI from "./BMI";
-import { useFocusEffect } from "@react-navigation/native";
-import { getStats } from "../../actions/userActions";
-import SnackBar from "../../components/SnackBar";
 import ChartView from "./ChartView";
 import Records from "./Records";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import StatsContainer from "./StatsContainer";
 
 const Stats = ({ navigation }) => {
     const theme = useTheme();
@@ -30,15 +30,13 @@ const Stats = ({ navigation }) => {
         dispatch({ type: RESET_STATISTICS_ERROR });
     }, []);
 
-    useFocusEffect(React.useCallback(() => {}, []));
+    useFocusEffect(React.useCallback(() => {
+        fetchStats();
+    }, []));
 
     const fetchStats = React.useCallback(() => {
         dispatch(getStats(userInfo._id, token));
     }, [userInfo, token]);
-
-    React.useEffect(() => {
-        fetchStats();
-    }, []);
 
     return (
         <RN.SafeAreaView style={styles.safeContainer}>
@@ -76,19 +74,9 @@ const Stats = ({ navigation }) => {
             </RN.View>
 
             <RN.ScrollView
-                refreshControl={
-                    <RN.RefreshControl
-                    title="Trascina per ricaricare..."
-                    titleColor={theme.colors.text}
-                    progressBackgroundColor={theme.colors.primary}
-                    colors={['white']}
-                    tintColor={['white']}
-                    refreshing={statisticsLoading}
-                    onRefresh={fetchStats}
-                    />
-                }
                 style={{ flex: 1 }}
             >
+                {/* BMI container */}
                 <StatsContainer>
                     <Paper.Text
                         style={{
@@ -102,8 +90,11 @@ const Stats = ({ navigation }) => {
                     <Spacing horizontal size="xl" />
 
                     <BMI />
+
                 </StatsContainer>
 
+
+                {/* Charts container */}
                 <StatsContainer>
                     <Paper.Text
                         style={{
@@ -121,6 +112,8 @@ const Stats = ({ navigation }) => {
 
                 <Spacing horizontal size="xl" />
 
+
+                {/* Records container */}
                 <Records />
 
                 <StatsContainer style={{ padding: 0 }}>

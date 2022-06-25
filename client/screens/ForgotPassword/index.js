@@ -14,8 +14,8 @@ import ModalEmail from "./ModalEmail";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import ControlledTextInput from "../../components/ControlledTextInput";
 import SnackBar from "../../components/SnackBar";
-import { forgotPasswordAction } from "../../actions/userActions";
-import { RESET_ERROR_USER } from "../../actions";
+import { forgotPasswordAction } from "../../redux/actions/userActions";
+import { RESET_ERROR_USER } from "../../redux/actions";
 import AppHeader from "../../components/AppHeader";
 
 const ForgotPasswordScreen = ({navigation}) => {

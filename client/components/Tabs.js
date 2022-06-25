@@ -1,8 +1,7 @@
-import * as React from "react";
-import * as RN from "react-native";
 import { Tabs as PaperTabs, TabScreen } from "react-native-paper-tabs";
 import { useTheme } from "../providers/theme.provider";
 
+//tabs view
 //always passing labels, icons and screens as arrays of same length
 //if no icons needed, just pass empty string
 const Tabs = ({ labels, icons, screens, ...props }) => {

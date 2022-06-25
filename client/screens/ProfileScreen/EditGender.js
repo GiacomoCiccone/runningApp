@@ -9,7 +9,7 @@ import SelectButton from "../../components/SelectButton";
 import { useDispatch, useSelector } from "react-redux";
 import AppHeader from "../../components/AppHeader";
 import Logo from "../../components/Logo";
-import { updateAction } from "../../actions/userActions";
+import { updateAction } from "../../redux/actions/userActions";
 
 const EditGender = ({ navigation }) => {
     const theme = useTheme();

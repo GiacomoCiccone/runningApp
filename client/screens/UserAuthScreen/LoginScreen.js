@@ -4,7 +4,7 @@ import * as Paper from "react-native-paper";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../../actions/userActions";
+import { loginAction } from "../../redux/actions/userActions";
 
 import { useForm } from "react-hook-form";
 import { useTheme } from "../../providers/theme.provider";

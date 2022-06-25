@@ -5,7 +5,7 @@ import {
     HISTORY_SUCCESS,
     RESET_HISTORY,
     HISTORY_FINISHED,
-} from "../actions/";
+} from "../actions";
 
 const initalState = {
     isLoading: false,

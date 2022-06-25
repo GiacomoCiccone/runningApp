@@ -2,29 +2,18 @@ import * as React from "react";
 
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import * as Moti from "moti";
-import { Skeleton } from "moti/skeleton";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
 
-import { useForm } from "react-hook-form";
 
 import { useTheme } from "../../providers/theme.provider";
 
-import Logo from "../../components/Logo";
-import Spacing from "../../components/Spacing";
-import ButtonSubmit from "../../components/ButtonSubmit";
-import ControlledTextInput from "../../components/ControlledTextInput";
-import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { updateAction } from "../../actions/userActions";
 import AppHeader from "../../components/AppHeader";
-import { RESET_HISTORY, RESET_HISTORY_ERROR } from "../../actions";
-import { getHistory } from "../../actions/historyActions";
 import SnackBar from "../../components/SnackBar";
-import { LinearGradient } from "expo-linear-gradient";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { RESET_HISTORY, RESET_HISTORY_ERROR } from "../../redux/actions";
+import { getHistory } from "../../redux/actions/historyActions";
 
 const History = ({ navigation }) => {
     const theme = useTheme();
@@ -55,6 +44,7 @@ const History = ({ navigation }) => {
     }, [userId, token, page, historyFinished]);
 
     React.useEffect(() => {
+        dispatch({ type: RESET_HISTORY })   //on first render reset the history
         fetchHistory();
         return () => dispatch({ type: RESET_HISTORY });
     }, []);

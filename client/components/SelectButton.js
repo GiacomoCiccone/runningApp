@@ -1,16 +1,14 @@
-import * as React from "react";
+import * as Moti from "moti";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import * as Moti from "moti";
 import { useTheme } from "../providers/theme.provider";
 
+// Gender select button with animation
 const SelectButton = ({ rippleColor, selected, setSelected, image }) => {
     const theme = useTheme();
 
     return (
-        <Moti.View
-            animate={{scale: selected ? 1.1 : 1.0}}
-        >
+        <Moti.View animate={{ scale: selected ? 1.1 : 1.0 }}>
             <Paper.TouchableRipple
                 rippleColor={rippleColor}
                 style={[

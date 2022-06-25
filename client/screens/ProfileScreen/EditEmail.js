@@ -16,7 +16,7 @@ import Spacing from "../../components/Spacing";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import ControlledTextInput from "../../components/ControlledTextInput";
 
-import { updateAction } from "../../actions/userActions";
+import { updateAction } from "../../redux/actions/userActions";
 import AppHeader from "../../components/AppHeader";
 
 const EditEmail = ({ navigation }) => {

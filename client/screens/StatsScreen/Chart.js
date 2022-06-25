@@ -1,8 +1,16 @@
-import * as React from "react";
 import { BarChart } from "react-native-chart-kit";
 import { useTheme } from "../../providers/theme.provider";
 import { hexToRgbA } from "../../utils";
-import { CHART_LABELS } from "../../utils/constants";
+
+const CHART_LABELS = [
+    "Dom",
+    "Lun",
+    "Mar",
+    "Mer",
+    "Gio",
+    "Ven",
+    "Sab",
+]
 
 const ChartView = ({ width, datasets }) => {
     const theme = useTheme();

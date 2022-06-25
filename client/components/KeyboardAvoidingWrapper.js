@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as RN from 'react-native';
 
+//This component is the wrapper for forms that need keyboard interaction
 const KeyboardAvoidingWrapper = ({children}) => {
 
     const dismissKeyboard = React.useCallback(() => {
@@ -14,7 +15,6 @@ const KeyboardAvoidingWrapper = ({children}) => {
                 <RN.TouchableWithoutFeedback onPress={dismissKeyboard}>
                 {children}
                 </RN.TouchableWithoutFeedback>
-                    
 
             </RN.ScrollView>
         </RN.KeyboardAvoidingView>

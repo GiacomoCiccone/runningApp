@@ -1,13 +1,11 @@
-import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import { BarChart } from "react-native-chart-kit";
-import { useSelector } from "react-redux";
-import { useTheme } from "../../providers/theme.provider";
-import { hexToRgbA, msToHMS } from "../../utils";
-import Spacing from "../../components/Spacing";
-import StatsContainer from "./StatsContainer";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector } from "react-redux";
+import Spacing from "../../components/Spacing";
+import { useTheme } from "../../providers/theme.provider";
+import { msToHMS } from "../../utils";
+import StatsContainer from "./StatsContainer";
 
 const Records = ({ width }) => {
     const theme = useTheme();

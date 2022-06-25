@@ -2,6 +2,7 @@ import * as Paper from "react-native-paper";
 import * as RN from "react-native";
 import { useTheme } from "../providers/theme.provider";
 
+// Button submit for the forms
 const ButtonSubmit = ({ label, onPress, error, style, contentStyle, loading }) => {
     const theme = useTheme();
 

@@ -1,11 +1,11 @@
 
-import * as React from 'react';
 import * as RN from 'react-native';
-import * as Paper from 'react-native-paper'
+import * as Paper from 'react-native-paper';
 
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../providers/theme.provider';
 
+//Component to display an app header with optional title at the top of the parent's container
 const AppHeader = ({title}) => {
     const theme = useTheme()
     const navigation = useNavigation()
@@ -14,6 +14,7 @@ const AppHeader = ({title}) => {
         <Paper.Appbar style={[styles.header, {width: theme.dimensions.width}]}>
             <Paper.Appbar.BackAction style={styles.headerBack} color={theme.colors.text} onPress={() => navigation.goBack()}/>
             
+            {/* Centered title */}
            {title && <RN.View
             >
                 <Paper.Text

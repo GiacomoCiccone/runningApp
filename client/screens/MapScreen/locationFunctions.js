@@ -2,8 +2,8 @@ import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import AsyncStorage from "@react-native-async-storage/async-storage/";
 
-import { store } from '../../store/'
-import { UPDATE_TRACKING_INFO } from "../../actions";
+import { store } from '../../redux/store'
+import { UPDATE_TRACKING_INFO } from "../../redux/actions";
 import { calcCalories, calcDistance } from "../../utils";
 
 const BACKGROUND_LOCATION_TASK = "BACKGROUND_LOCATION_TASK";

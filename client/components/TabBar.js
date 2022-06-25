@@ -1,28 +1,23 @@
-import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import * as Moti from "moti";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 //redux
+import { LinearGradient } from "expo-linear-gradient";
 import { useSelector } from "react-redux";
 import { useTheme } from "../providers/theme.provider.js";
-import { LinearGradient } from "expo-linear-gradient";
 
-
-import Spacing from "../components/Spacing.js";
 import {
     ThunderIcon,
     ThunderIconOutlineDark,
     ThunderIconOutlineWhite,
 } from "../assets/images/index.js";
+import Spacing from "../components/Spacing.js";
 import TouchableRipple from "./TouchableRipple.js";
 
-
-
-const Tab = ({route, index, descriptors, navigation, state}) => {
-
-    const theme = useTheme()
+//Tab for the tab bar
+const Tab = ({ route, index, descriptors, navigation, state }) => {
+    const theme = useTheme();
 
     const { options } = descriptors[route.key];
     const label =
@@ -34,11 +29,10 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
 
     const isFocused = state.index === index;
 
-    const iconColor = isFocused
-        ? theme.colors.primary
-        : theme.colors.text;
+    const iconColor = isFocused ? theme.colors.primary : theme.colors.text;
     const iconSize = 27;
     let icon;
+    //icon based on route
     if (route.name === "Map") {
         const source = isFocused
             ? ThunderIcon
@@ -47,36 +41,19 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
             : ThunderIconOutlineDark;
         icon = (
             <RN.View style={styles.iconImageWrapper}>
-                <RN.Image
-                    style={styles.iconImage}
-                    source={source}
-                />
+                <RN.Image style={styles.iconImage} source={source} />
             </RN.View>
         );
     }
     if (route.name === "Stats") {
-        const iconName = isFocused
-            ? "chart-box"
-            : "chart-box-outline";
-        icon = (
-            <Icon
-                name={iconName}
-                color={iconColor}
-                size={iconSize}
-            />
-        );
+        const iconName = isFocused ? "chart-box" : "chart-box-outline";
+        icon = <Icon name={iconName} color={iconColor} size={iconSize} />;
     }
     if (route.name === "Profile") {
         const iconName = isFocused
             ? "account-circle"
             : "account-circle-outline";
-        icon = (
-            <Icon
-                name={iconName}
-                color={iconColor}
-                size={iconSize}
-            />
-        );
+        icon = <Icon name={iconName} color={iconColor} size={iconSize} />;
     }
 
     const onPress = () => {
@@ -106,21 +83,15 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
         <RN.View style={styles.touchableWrapper}>
             <TouchableRipple
                 accessibilityRole="button"
-                accessibilityState={
-                    isFocused ? { selected: true } : {}
-                }
-                accessibilityLabel={
-                    options.tabBarAccessibilityLabel
-                }
+                accessibilityState={isFocused ? { selected: true } : {}}
+                accessibilityLabel={options.tabBarAccessibilityLabel}
                 testID={options.tabBarTestID}
                 onPress={onPress}
                 onLongPress={onLongPress}
                 left={route.name === "Stats"}
                 right={route.name === "Profile"}
             >
-                <RN.View
-                    style={styles.contentWrapper}
-                >
+                <RN.View style={styles.contentWrapper}>
                     {icon}
                     <Spacing horizontal size="xs" />
                     <Paper.Text
@@ -139,23 +110,20 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
                             style={[
                                 styles.badgeWrapper,
                                 {
-                                    backgroundColor:
-                                        theme.colors
-                                            .notification,
-                                    borderRadius:
-                                        theme.rounded.full,
+                                    backgroundColor: theme.colors.notification,
+                                    borderRadius: theme.rounded.full,
                                 },
                             ]}
                         >
                             <Paper.Text
                                 numberOfLines={1}
                                 ellipsizeMode={"tail"}
-                                style={{
-                                    color: "white",
-                                    fontFamily: "Rubik-Medium",
-                                    fontSize:
-                                        theme.fontSize["2xs"],
-                                }}
+                                style={[
+                                    styles.badgeText,
+                                    {
+                                        fontSize: theme.fontSize["2xs"],
+                                    },
+                                ]}
                             >
                                 {options.tabBarBadge}
                             </Paper.Text>
@@ -165,32 +133,42 @@ const Tab = ({route, index, descriptors, navigation, state}) => {
             </TouchableRipple>
         </RN.View>
     );
-}
+};
 
+// Custom tab bar for the navigation
 const TabBar = ({ state, descriptors, navigation, theme }) => {
-
-    const startDate = useSelector(state => state.trackingSession.startDate)
+    const startDate = useSelector((state) => state.trackingSession.startDate);
 
     return (
         <>
-        {!startDate && <>
-            <LinearGradient
-                style={styles.tabBarGradient}
-                start={{ x: 1.0, y: 1.0 }}
-                end={{ x: 1.0, y: 0.0 }}
-                colors={["black", "transparent"]}
-            />
-            <RN.View
-                style={[
-                    styles.tabBarContainer,
-                    { backgroundColor: theme.colors.background },
-                ]}
-            >
-                {state.routes.map((route, index) => <Tab key={route.name} route={route} index={index} descriptors={descriptors} navigation={navigation} state={state}/>)}
-            </RN.View>
-        </>}
+            {!startDate && (
+                <>
+                    <LinearGradient
+                        style={styles.tabBarGradient}
+                        start={{ x: 1.0, y: 1.0 }}
+                        end={{ x: 1.0, y: 0.0 }}
+                        colors={["black", "transparent"]}
+                    />
+                    <RN.View
+                        style={[
+                            styles.tabBarContainer,
+                            { backgroundColor: theme.colors.background },
+                        ]}
+                    >
+                        {state.routes.map((route, index) => (
+                            <Tab
+                                key={route.name}
+                                route={route}
+                                index={index}
+                                descriptors={descriptors}
+                                navigation={navigation}
+                                state={state}
+                            />
+                        ))}
+                    </RN.View>
+                </>
+            )}
         </>
-        
     );
 };
 
@@ -198,7 +176,7 @@ const styles = RN.StyleSheet.create({
     tabBarGradient: {
         height: 70,
         backgroundColor: "transparent",
-        position: 'absolute',
+        position: "absolute",
         bottom: 0,
         width: "100%",
     },
@@ -234,6 +212,10 @@ const styles = RN.StyleSheet.create({
         position: "absolute",
         left: 27,
         top: -5,
+    },
+    badgeText: {
+        color: "white",
+        fontFamily: "Rubik-Medium",
     },
 });
 

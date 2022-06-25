@@ -1,12 +1,9 @@
+import * as Moti from "moti";
 import * as React from "react";
 import * as RN from "react-native";
+import { CodeField, Cursor } from "react-native-confirmation-code-field";
 import * as Paper from "react-native-paper";
-import * as Moti from "moti";
 import { useTheme } from "../providers/theme.provider";
-import {
-    CodeField,
-    Cursor,
-} from "react-native-confirmation-code-field";
 
 const animationDuration = 400;
 const frames = 5;
@@ -20,7 +17,7 @@ const shakeSequence = [
     { value: 0, type: "timing", duration: frameDuration },
 ];
 
-const TextInput = ({ error, full, ...props }) => {
+const CodeInput = ({ error, full, ...props }) => {
     const theme = useTheme();
     const lastError = React.useRef(null);
     const animationState = Moti.useAnimationState({
@@ -52,35 +49,38 @@ const TextInput = ({ error, full, ...props }) => {
                 cellCount={4}
                 rootStyle={{
                     marginVertical: theme.spacing.xl,
-                    marginHorizontal: theme.spacing.xl
+                    marginHorizontal: theme.spacing.xl,
                 }}
                 keyboardType="number-pad"
                 textContentType="oneTimeCode"
                 renderCell={({ index, symbol, isFocused }) => (
                     <Paper.Text
-                        style={{
-                            height: 70,
-                            width: 50,
-                            fontSize: theme.fontSize.sm,
-                            fontFamily: "Rubik-Medium",
-                            textAlign: "center",
-                            textAlignVertical: "center",
-                            backgroundColor: theme.colors.backgroundElevation,
-                            borderRadius: theme.roundness,
-                            ...theme.shadowBox[full ? 'xl' : 'default'],
-                            borderWidth: theme.border.default,
-                            borderColor: full ? theme.colors.primary + '1A' : error
-                            ? theme.colors.error + "1A"
-                            : !isFocused
-                            ? theme.colors.grey + "1A"
-                            : theme.colors.primary + "1A",
-                            shadowColor: full ? theme.colors.primary : error
-                                ? theme.colors.error
-                                : !isFocused
-                                ? theme.colors.grey
-                                : theme.colors.primary,
-                        }}
                         key={index}
+                        style={[
+                            styles.input,
+                            {
+                                fontSize: theme.fontSize.sm,
+                                backgroundColor:
+                                    theme.colors.backgroundElevation,
+                                borderRadius: theme.roundness,
+                                ...theme.shadowBox[full ? "xl" : "default"],
+                                borderWidth: theme.border.default,
+                                borderColor: full
+                                    ? theme.colors.primary + "1A"
+                                    : error
+                                    ? theme.colors.error + "1A"
+                                    : !isFocused
+                                    ? theme.colors.grey + "1A"
+                                    : theme.colors.primary + "1A",
+                                shadowColor: full
+                                    ? theme.colors.primary
+                                    : error
+                                    ? theme.colors.error
+                                    : !isFocused
+                                    ? theme.colors.grey
+                                    : theme.colors.primary,
+                            },
+                        ]}
                     >
                         {symbol || (isFocused ? <Cursor /> : null)}
                     </Paper.Text>
@@ -93,14 +93,14 @@ const TextInput = ({ error, full, ...props }) => {
                         state={animationState}
                         exit={{ opacity: 0 }}
                         exitTransition={{ duration: 100, type: "timing" }}
-                        style={{
-                            color: theme.colors.error,
-                            position: "absolute",
-                            bottom: 0,
-                            left: theme.spacing.md,
-                            fontFamily: "Rubik-Regular",
-                            fontSize: theme.fontSize.xs,
-                        }}
+                        style={[
+                            styles.errorText,
+                            {
+                                color: theme.colors.error,
+                                left: theme.spacing.md,
+                                fontSize: theme.fontSize.xs,
+                            },
+                        ]}
                     >
                         {error.message}
                     </Moti.MotiText>
@@ -110,4 +110,19 @@ const TextInput = ({ error, full, ...props }) => {
     );
 };
 
-export default React.memo(TextInput);
+const styles = RN.StyleSheet.create({
+    input: {
+        height: 70,
+        width: 50,
+        fontFamily: "Rubik-Medium",
+        textAlign: "center",
+        textAlignVertical: "center",
+    },
+    errorText: {
+        position: "absolute",
+        bottom: 0,
+        fontFamily: "Rubik-Regular",
+    },
+});
+
+export default React.memo(CodeInput);

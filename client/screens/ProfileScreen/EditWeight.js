@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AppHeader from "../../components/AppHeader";
 import Logo from "../../components/Logo";
 import Picker from "../../components/Picker";
-import { updateAction } from "../../actions/userActions";
+import { updateAction } from "../../redux/actions/userActions";
 
 const EditWeight = ({ navigation }) => {
     const theme = useTheme();

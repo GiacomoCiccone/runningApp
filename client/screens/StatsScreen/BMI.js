@@ -1,14 +1,14 @@
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
 import * as RN from "react-native";
-import * as Paper from 'react-native-paper'
+import * as Paper from "react-native-paper";
 import { useSelector } from "react-redux";
 import Spacing from "../../components/Spacing";
 import { useTheme } from "../../providers/theme.provider";
 import { calcBMI } from "../../utils";
 
 const BMI = () => {
-    const theme = useTheme()
+    const theme = useTheme();
     const userHeight = useSelector((state) => state.user.userInfo.height);
     const userWeight = useSelector((state) => state.user.userInfo.weight);
 
@@ -36,7 +36,7 @@ const BMI = () => {
                         width: 6,
                         backgroundColor: theme.colors.primary,
                         left: `${(Math.min(BMI, 40) / 40) * 100}%`,
-                        transform: [{translateX: -4}]
+                        transform: [{ translateX: -4 }],
                     }}
                 />
             </LinearGradient>

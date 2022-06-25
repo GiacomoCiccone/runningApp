@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "../../providers/theme.provider";
 import Spacing from "../../components/Spacing";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAction } from "../../actions/userActions";
+import { deleteAction } from "../../redux/actions/userActions";
 
 const ModalDeleteAccount = ({ visible, onDismiss, ...props }) => {
     const theme = useTheme();

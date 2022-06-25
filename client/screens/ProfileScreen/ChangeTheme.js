@@ -17,11 +17,11 @@ import ButtonSubmit from "../../components/ButtonSubmit";
 import ControlledTextInput from "../../components/ControlledTextInput";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
-import { updateAction } from "../../actions/userActions";
+import { updateAction } from "../../redux/actions/userActions";
 import AppHeader from "../../components/AppHeader";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { CHANGE_THEME } from "../../actions";
+import { CHANGE_THEME } from "../../redux/actions";
 import { Easing } from "react-native-reanimated";
 
 const ChangeTheme = ({ navigation }) => {

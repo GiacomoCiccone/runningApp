@@ -12,19 +12,23 @@ const rulerDimension = 70;
 const markerLenght = 50;
 const markerThickness = 5;
 
+//Segment component for the picker
 const Segment = React.memo(({ item, horizontal, tenth }) => {
     const theme = useTheme();
 
+    //horizontal
     if (horizontal)
         return (
             <RN.View
-                style={{
-                    width: snapSegment,
-                    height: rulerDimension,
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                }}
+                style={[
+                    styles.segmentContainerHorizontal,
+                    {
+                        width: snapSegment,
+                        height: rulerDimension,
+                    },
+                ]}
             >
+                {/* if thent make it higher */}
                 <RN.View
                     style={{
                         opacity: tenth ? 1 : 0.5,
@@ -35,15 +39,9 @@ const Segment = React.memo(({ item, horizontal, tenth }) => {
                     }}
                 />
 
+                {/* if tenth display the number */}
                 {tenth && (
-                    <RN.View
-                        style={{
-                            position: "absolute",
-                            alignItems: "center",
-                            top: 20,
-                            width: 35,
-                        }}
-                    >
+                    <RN.View style={styles.tenthTextWrapperHorizontal}>
                         <Paper.Text
                             style={{
                                 fontSize: theme.fontSize.xs,
@@ -59,17 +57,18 @@ const Segment = React.memo(({ item, horizontal, tenth }) => {
 
     return (
         <RN.View
-            style={{
-                width: rulerDimension,
-                height: snapSegment,
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
-            }}
+            style={[
+                styles.segmentContainerVertical,
+                {
+                    width: rulerDimension,
+                    height: snapSegment,
+                },
+            ]}
         >
             <RN.View
                 style={{
                     opacity: tenth ? 1 : 0.5,
-                        backgroundColor: theme.colors.grey,
+                    backgroundColor: theme.colors.grey,
                     width: tenth ? segmentLengthTenth : segmentLenght,
                     height: segmentThickness,
                     borderRadius: theme.rounded.lg,
@@ -78,13 +77,12 @@ const Segment = React.memo(({ item, horizontal, tenth }) => {
 
             {tenth && (
                 <RN.View
-                    style={{
-                        position: "absolute",
-                        alignItems: "center",
-                        top: snapSegment * 0.3,
-                        left: 0,
-                        width: 35,
-                    }}
+                    style={[
+                        styles.tenthTextWrapperVertical,
+                        {
+                            top: snapSegment * 0.3,
+                        },
+                    ]}
                 >
                     <Paper.Text
                         style={{
@@ -100,6 +98,9 @@ const Segment = React.memo(({ item, horizontal, tenth }) => {
     );
 });
 
+//This component is a weight (horizontal) and height (vertical) picker.
+//Precision indicates the number of decimal places.
+//It can be slow if the range has too many values
 const Picker = ({
     min = 0,
     max = 100,
@@ -107,9 +108,10 @@ const Picker = ({
     horizontal = false,
     defaultValue = min,
     onChange,
-    unit
+    unit,
 }) => {
     if (precision < 0 || precision > 2)
+        //too much precision slow the render too much
         throw Error("Precision must be in 0..2");
     if (min > max) throw Error("Enter a valid range");
     if (defaultValue > max || defaultValue < min)
@@ -129,6 +131,7 @@ const Picker = ({
         else setTextDimension(60);
     }, [horizontal]);
 
+    //create the data
     React.useEffect(() => {
         const decimalPrecision = parseInt(
             "1".concat(Array(precision).fill(0).join(""))
@@ -174,22 +177,25 @@ const Picker = ({
         }
     }, [defaultValue, data]);
 
-    //on scroll end update value
+    //on scrollend update value
     const onScrollEndHandler = React.useCallback(
         (e) => {
-            if (data.length > 0 && scrollViewLength > 0 && textRef && textRef.current) {
+            if (
+                data.length > 0 &&
+                scrollViewLength > 0 &&
+                textRef &&
+                textRef.current
+            ) {
                 const scrollViewContentLenght =
                     e.nativeEvent.contentSize[horizontal ? "width" : "height"];
 
                 const scrollOffset =
                     e.nativeEvent.contentOffset[horizontal ? "x" : "y"];
-                    const current = Math.floor(
-                        (scrollOffset /
-                            (scrollViewContentLenght -
-                                (scrollViewLength))) *
-                            data.length
-                    )
-
+                const current = Math.floor(
+                    (scrollOffset /
+                        (scrollViewContentLenght - scrollViewLength)) *
+                        data.length
+                );
 
                 let newValue = data.find((item) => item.id === current)?.value;
 
@@ -199,27 +205,31 @@ const Picker = ({
                     text: newValue.toString(),
                 });
 
-                onChange(newValue);
+                onChange(newValue); //send the new value
             }
         },
         [horizontal, scrollViewLength, data]
     );
-    
-    //update textinput
+
+    //update textinput while scrolling
     const onScrollHandler = React.useCallback(
         (e) => {
-            if (data.length > 0 && scrollViewLength > 0 && textRef && textRef.current) {
+            if (
+                data.length > 0 &&
+                scrollViewLength > 0 &&
+                textRef &&
+                textRef.current
+            ) {
                 const scrollViewContentLenght =
                     e.nativeEvent.contentSize[horizontal ? "width" : "height"];
 
                 const scrollOffset =
                     e.nativeEvent.contentOffset[horizontal ? "x" : "y"];
-                    const current = Math.floor(
-                        (scrollOffset /
-                            (scrollViewContentLenght -
-                                (scrollViewLength))) *
-                            data.length
-                    )
+                const current = Math.floor(
+                    (scrollOffset /
+                        (scrollViewContentLenght - scrollViewLength)) *
+                        data.length
+                );
 
                 let newValue = data.find((item) => item.id === current)?.value;
 
@@ -233,6 +243,7 @@ const Picker = ({
         [horizontal, scrollViewLength, data]
     );
 
+    //it fires when the container is rendered
     const onLayoutHandler = React.useCallback(
         (e) => {
             setScrollViewLength(
@@ -269,6 +280,7 @@ const Picker = ({
                 flexDirection: !horizontal ? "row-reverse" : "column",
             }}
         >
+            {/* Picker */}
             <RN.FlatList
                 ref={scrollViewRef}
                 horizontal={horizontal}
@@ -302,22 +314,25 @@ const Picker = ({
                 maxToRenderPerBatch={30}
             />
 
+            {/* Text */}
             <RN.View
-                style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    width: !horizontal ? textDimension : null,
-                    height: horizontal ? textDimension : null,
-                    top: !horizontal ? 10 : null
-                }}
+                style={[
+                    styles.textInputWrapper,
+                    {
+                        width: !horizontal ? textDimension : null,
+                        height: horizontal ? textDimension : null,
+                        top: !horizontal ? 10 : null,
+                    },
+                ]}
             >
                 <RN.TextInput
-                    style={{
-                        fontFamily: "Rubik-Bold",
-                        fontSize: theme.fontSize["2xl"],
-                        color: theme.colors.primary,
-                    }}
+                    style={[
+                        styles.textInput,
+                        {
+                            fontSize: theme.fontSize["2xl"],
+                            color: theme.colors.primary,
+                        },
+                    ]}
                     ref={textRef}
                     defaultValue={defaultValue.toString()}
                 />
@@ -327,28 +342,72 @@ const Picker = ({
                         color: theme.colors.primary,
                     }}
                 >
-                    {"  "}{unit}
+                    {"  "}
+                    {unit}
                 </Paper.Text>
             </RN.View>
 
+            {/* Marker */}
             <RN.View
-                style={{
-                    backgroundColor: theme.colors.primary,
-                    width: horizontal ? markerThickness : markerLenght,
-                    height: !horizontal ? markerThickness : markerLenght,
-                    top: !horizontal
-                        ? (scrollViewLength) / 2 + snapSegment - segmentThickness / 2 - markerThickness / 2
-                        : null,
-                    left: horizontal
-                        ? (scrollViewLength) / 2 + markerThickness / 2 + segmentThickness / 2
-                        : null,
-                    position: "absolute",
-                    borderRadius: theme.rounded.lg,
-                    ...theme.shadowBox.default,
-                }}
+                style={[
+                    styles.marker,
+                    {
+                        backgroundColor: theme.colors.primary,
+                        width: horizontal ? markerThickness : markerLenght,
+                        height: !horizontal ? markerThickness : markerLenght,
+                        top: !horizontal
+                            ? scrollViewLength / 2 +
+                              snapSegment -
+                              segmentThickness / 2 -
+                              markerThickness / 2
+                            : null,
+                        left: horizontal
+                            ? scrollViewLength / 2 +
+                              markerThickness / 2 +
+                              segmentThickness / 2
+                            : null,
+
+                        borderRadius: theme.rounded.lg,
+                        ...theme.shadowBox.default,
+                    },
+                ]}
             />
         </RN.View>
     );
 };
+
+const styles = RN.StyleSheet.create({
+    segmentContainerVertical: {
+        justifyContent: "flex-end",
+        alignItems: "flex-end",
+    },
+    segmentContainerHorizontal: {
+        justifyContent: "flex-end",
+        alignItems: "center",
+    },
+    tenthTextWrapperHorizontal: {
+        position: "absolute",
+        alignItems: "center",
+        top: 20,
+        width: 35,
+    },
+    tenthTextWrapperVertical: {
+        position: "absolute",
+        alignItems: "center",
+        left: 0,
+        width: 35,
+    },
+    textInputWrapper: {
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+    },
+    textInput: {
+        fontFamily: "Rubik-Bold",
+    },
+    marker: {
+        position: "absolute",
+    },
+});
 
 export default Picker;

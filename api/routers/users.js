@@ -54,7 +54,7 @@ router.route("/:id").put(protect, async (req, res, next) => {
                         );
                     }
 
-                    req.body = { password: req.body.passwordNew };
+                    req.body = { password: req.body.password };
                 } catch (error) {
                     return next(error);
                 }

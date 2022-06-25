@@ -9,9 +9,9 @@ import { useTheme } from "../../providers/theme.provider";
 
 import UserMarker from "./UserMarker";
 
-import mapStyleLight from "../../common/MapStyle/mapStyleLight.json";
 import mapStyleDark from "../../common/MapStyle/mapStyleDark.json";
-import CircleMarker from "./CircleMarker";
+import mapStyleLight from "../../common/MapStyle/mapStyleLight.json";
+import CircleMarker from "../../components/CircleMarker";
 
 const Map = ({
     setFullSize,
@@ -24,7 +24,7 @@ const Map = ({
     const currentLocation = useSelector(
         (state) => state.trackingSession.currentLocation
     );
-    const heading = useSelector((state) => state.trackingSession.heading);
+    const heading = useSelector((state) => state.trackingSession.heading); //rotate the user location marker based on heading value
     const history = useSelector((state) => state.trackingSession.history);
     const numOfPauses = useSelector(
         (state) => state.trackingSession.numOfPauses
@@ -41,8 +41,8 @@ const Map = ({
     }, []);
 
     React.useEffect(() => {
-        if(!currentLocation) setMapReady(false)
-    }, [currentLocation])
+        if (!currentLocation) setMapReady(false);
+    }, [currentLocation]);
 
     return (
         <RN.View style={styles.mapContainer}>
@@ -86,7 +86,10 @@ const Map = ({
                             }}
                             tappable={false}
                             rotation={heading}
-                            coordinate={{latitude: currentLocation.latitude, longitude: currentLocation.longitude}}
+                            coordinate={{
+                                latitude: currentLocation.latitude,
+                                longitude: currentLocation.longitude,
+                            }}
                         >
                             <UserMarker />
                         </ReactMap.Marker>
@@ -95,7 +98,7 @@ const Map = ({
                         if (!subHistory) return;
                         return (
                             <ReactMap.Polyline
-                                key={'polyline-' + i}
+                                key={"polyline-" + i}
                                 lineCap="round"
                                 fillColor={theme.colors.primary}
                                 strokeColor={theme.colors.primary}
@@ -125,8 +128,7 @@ const Map = ({
                                 subHistory[subHistory.length - 1].longitude,
                         };
                         return (
-                            <RN.View
-                            key={"marker-"+i}>
+                            <RN.View key={"marker-" + i}>
                                 <ReactMap.Marker
                                     anchor={{ x: 0.5, y: 0.5 }}
                                     coordinate={coordinateStart}
@@ -170,7 +172,7 @@ const styles = RN.StyleSheet.create({
         bottom: "-10%",
     },
     map: {
-        flex: 1
+        flex: 1,
     },
 });
 

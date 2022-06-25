@@ -1,36 +1,32 @@
+import * as Location from "expo-location";
 import * as React from "react";
 import * as RN from "react-native";
-import * as Location from "expo-location";
-import AsyncStorage from "@react-native-async-storage/async-storage/";
 
 //redux
 import { useDispatch, useSelector } from "react-redux/";
+import AsyncStorage from "@react-native-async-storage/async-storage/";
 
-import TopBanner from "./TopBanner";
-import PermissionModal from "./PermissionModal";
+import axios from "axios";
 import SnackBar from "../../components/SnackBar";
-import { store } from "../../store/";
-import BottomBanner from "./BottomBanner";
 import {
-    LOCATION_ERROR,
-    UPDATE_TRACKING_INFO,
-    RESET_LOCATION_ERROR,
-    REHYDRATE_SESSION_FROM_STORAGE,
-    RESET_TRACKING_SESSION,
-} from "../../actions";
+    LOCATION_ERROR, REHYDRATE_SESSION_FROM_STORAGE, RESET_LOCATION_ERROR, RESET_TRACKING_SESSION, UPDATE_TRACKING_INFO
+} from "../../redux/actions";
+import { sendTrackingInfo } from "../../redux/actions/trackingSessionActions";
+import { store } from "../../redux/store";
+import { WHEATER_API_KEY } from "../../utils/.env";
+import BottomBanner from "./BottomBanner";
 import {
     requestPermissions,
     startBackgroundUpdate,
     stopBackgroundUpdate,
-    TRACKING_SESSION_KEY,
+    TRACKING_SESSION_KEY
 } from "./locationFunctions";
 import Map from "./Map";
-import axios from "axios";
-import { WHEATER_API_KEY } from "../../utils/constants";
 import ModalSummary from "./ModalSummary";
-import { sendTrackingInfo } from "../../actions/trackingSessionActions";
+import PermissionModal from "./PermissionModal";
+import TopBanner from "./TopBanner";
 
-const MapScreen = ({ navigation }) => {
+const MapScreen = () => {
     //redux
     const dispatch = useDispatch();
     const trackingActive = useSelector(
@@ -43,10 +39,9 @@ const MapScreen = ({ navigation }) => {
     const appState = React.useRef(RN.AppState.currentState); //track app state change
     const [isGPSEnabled, setGPSisEnabled] = React.useState(false); //track information about gps
 
-    const [fullSizeBanner, setFullSizeBanner] = React.useState(true);
-    const [mapType, setMapType] = React.useState("standard");
-    const [centerToLocation, setCenterToLocation] = React.useState(true);
-
+    const [fullSizeBanner, setFullSizeBanner] = React.useState(true);   //is the top banner full size?
+    const [mapType, setMapType] = React.useState("standard");   //map style (satellite, standard, etc)
+    const [centerToLocation, setCenterToLocation] = React.useState(true);   //should track the user position on the map?
     const [showPermissionModal, setShowPermissionModal] = React.useState(false);
 
     //asking the user for the permissions with a message
@@ -66,6 +61,36 @@ const MapScreen = ({ navigation }) => {
         dispatch({ type: RESET_LOCATION_ERROR });
     }, []);
 
+    const closeSummaryModal = React.useCallback(() => {
+            const {
+                currentLocation,
+                heading,
+                error,
+                numOfPauses,
+                trackingActive,
+                pace,
+                speed,
+                altitude,
+                weather,
+                ...info
+            } = store.getState().trackingSession; //send only useful information
+            const body = {
+                ...info,
+                history: info.history.map((subHistory) =>
+                    subHistory.map((loc) => {
+                        return {
+                            latitude: loc.latitude,
+                            longitude: loc.longitude,
+                        };
+                    })
+                ),
+                user: userId,
+            };
+
+            dispatch(sendTrackingInfo(body));   //send to backend
+    }, [userId])
+
+    //function to retrive the saved information, if they exist
     const retriveSavedInformation = async () => {
         const trackingSessionInStorage = await AsyncStorage.getItem(
             TRACKING_SESSION_KEY
@@ -75,7 +100,6 @@ const MapScreen = ({ navigation }) => {
             const { backgroundAt, ...trackingInfoSaved } = JSON.parse(
                 trackingSessionInStorage
             );
-
             const now = new Date();
             if (trackingInfoSaved.trackingActive)
                 trackingInfoSaved.time =
@@ -86,7 +110,7 @@ const MapScreen = ({ navigation }) => {
                 payload: trackingInfoSaved,
             });
 
-            await AsyncStorage.removeItem(TRACKING_SESSION_KEY);
+            await AsyncStorage.removeItem(TRACKING_SESSION_KEY);    //delete the entry in the storage
         } else {
             //else start the background update
             await requestPermissions();
@@ -131,10 +155,6 @@ const MapScreen = ({ navigation }) => {
                 await stopBackgroundUpdate();
                 setShowPermissionModal(true);
             }
-            const { granted: foregroundGranted } =
-                await Location.getBackgroundPermissionsAsync();
-            const { granted: backgroundGranted } =
-                await Location.getBackgroundPermissionsAsync();
         })();
     }, []);
 
@@ -280,33 +300,7 @@ const MapScreen = ({ navigation }) => {
 
             <ModalSummary
                 visible={endDate}
-                onDismiss={() => {
-                    const {
-                        currentLocation,
-                        heading,
-                        error,
-                        numOfPauses,
-                        trackingActive,
-                        pace,
-                        speed,
-                        altitude,
-                        ...info
-                    } = store.getState().trackingSession; //send only useful information
-                    const body = {
-                        ...info,
-                        history: info.history.map((subHistory) =>
-                            subHistory.map((loc) => {
-                                return {
-                                    latitude: loc.latitude,
-                                    longitude: loc.longitude,
-                                };
-                            })
-                        ),
-                        user: userId,
-                    };
-
-                    dispatch(sendTrackingInfo(body));
-                }}
+                onDismiss={closeSummaryModal}
             />
         </RN.SafeAreaView>
     );

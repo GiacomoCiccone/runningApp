@@ -20,7 +20,7 @@ import {
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAIL,
     RESET_UPDATED
-} from "../actions/";
+} from "../actions";
 
 const initalState = {
     authToken: null,

@@ -1,12 +1,10 @@
 import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import * as Moti from "moti";
-import { useTheme } from "../../providers/theme.provider";
-import Spacing from "../../components/Spacing";
-import { FemaleGender, MaleGender } from "../../assets/images";
 import ButtonSubmit from "../../components/ButtonSubmit";
-import Picker from '../../components/Picker'
+import Picker from '../../components/Picker';
+import Spacing from "../../components/Spacing";
+import { useTheme } from "../../providers/theme.provider";
 
 const WeightScreen = ({ goNext, weight, setWeight }) => {
     const theme = useTheme();

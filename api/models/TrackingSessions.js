@@ -13,30 +13,32 @@ const TrackingSessionSchema = new mongoose.Schema(
         maxSpeed: {
             type: Number,
             required: [true, "Velocità massima richiesta"],
+            default: 0
         },
         averageSpeed: {
             type: Number,
             required: [true, "Velocità media richiesta"],
+            default: 0
         },
         calories: {
             type: Number,
             required: [true, "Calorie richieste"],
-        },
-        weather: {
-            icon: String,
-            temp: Number,
+            default: 0
         },
         distance: {
             type: Number,
             required: [true, "Distanza richiesta"],
+            default: 0
         },
         time: {
             type: Number,
             required: [true, "Durata richiesta"],
+            default: 0
         },
         averagePace: {
             type: Number,
             required: [true, "Ritmo medio richiesto"],
+            default: 0
         },
         history: {
             type: [[]],

@@ -1,6 +1,6 @@
 import {
     CHANGE_THEME
-} from "../actions/";
+} from "../actions";
 
 const initalState = {
     theme: "default"

@@ -1,10 +1,9 @@
-import * as React from "react";
-import { LightTheme, DarkTheme } from "../common/theme";
-import { useColorScheme } from "react-native";
-import { StatusBar } from "react-native";
 import * as Font from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
+import * as React from "react";
+import { StatusBar, useColorScheme } from "react-native";
 import { useSelector } from "react-redux";
+import { DarkTheme, LightTheme } from "../common/theme";
 
 //create the context
 export const ThemeContext = React.createContext();
@@ -53,16 +52,17 @@ export const ThemeProvider = ({ children }) => {
 
     React.useEffect(() => {
         const navigationBarButtonColor = theme.dark ? "light" : "dark";
-        const barStyle = theme.dark ? 'light-content' : 'dark-content';
+        const barStyle = theme.dark ? "light-content" : "dark-content";
 
         (async () => {
-            await NavigationBar.setBackgroundColorAsync(theme.colors.background);
+            await NavigationBar.setBackgroundColorAsync(
+                theme.colors.background
+            );
             await NavigationBar.setButtonStyleAsync(navigationBarButtonColor);
 
-            StatusBar.setBarStyle(barStyle)
-            StatusBar.setBackgroundColor(theme.colors.background)
-        })()
-       
+            StatusBar.setBarStyle(barStyle);
+            StatusBar.setBackgroundColor(theme.colors.background);
+        })();
     }, [theme]);
 
     return (

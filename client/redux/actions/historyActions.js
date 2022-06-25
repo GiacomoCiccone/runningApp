@@ -1,5 +1,5 @@
 import { HISTORY_FAIL, HISTORY_FINISHED, HISTORY_REQUEST, HISTORY_SUCCESS } from ".";
-import axios from '../axios'
+import axios from '../../axios'
 
 export const getHistory = (userId, token, page, onSuccess) => async (dispatch) => {
     dispatch({ type: HISTORY_REQUEST, payload: {} });
@@ -18,7 +18,7 @@ export const getHistory = (userId, token, page, onSuccess) => async (dispatch) =
         onSuccess();
 
     } catch (error) {
-        if(error.response.data.data?.finished) dispatch({type: HISTORY_FINISHED});
-        else dispatch({ type: HISTORY_FAIL, payload: error.response.data.error });
+        if(error.response?.data?.data?.finished) dispatch({type: HISTORY_FINISHED});
+        else dispatch({ type: HISTORY_FAIL, payload: error.response?.data?.error || error.message });
     }
 };

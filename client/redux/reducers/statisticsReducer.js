@@ -1,4 +1,4 @@
-import { RESET_STATISTICS_ERROR, STATISTICS_FAIL, STATISTICS_REQUEST, STATISTICS_SUCCESS } from "../actions/";
+import { RESET_STATISTICS_ERROR, STATISTICS_FAIL, STATISTICS_REQUEST, STATISTICS_SUCCESS } from "../actions";
 
 const initalState = {
     isLoading: false,

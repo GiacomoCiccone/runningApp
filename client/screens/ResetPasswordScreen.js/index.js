@@ -20,8 +20,8 @@ import ControlledCodeInput from "../../components/ControlledCodeInput";
 import SnackBar from "../../components/SnackBar";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
-import { resetPasswordAction } from "../../actions/userActions";
-import { RESET_ERROR_USER } from "../../actions";
+import { resetPasswordAction } from "../../redux/actions/userActions";
+import { RESET_ERROR_USER } from "../../redux/actions";
 import AppHeader from "../../components/AppHeader";
 
 const ResetPasswordScreen = ({ navigation }) => {

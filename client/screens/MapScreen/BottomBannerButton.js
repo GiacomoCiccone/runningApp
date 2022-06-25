@@ -1,5 +1,3 @@
-import * as React from "react";
-import * as RN from "react-native";
 import * as Paper from "react-native-paper";
 import { useTheme } from "../../providers/theme.provider";
 
@@ -27,8 +25,8 @@ const BottomBannerButton = ({
                 style,
             ]}
             contentStyle={{
-                height: '100%',
-                width: '100%'
+                height: "100%",
+                width: "100%",
             }}
             labelStyle={{
                 color: labelColor,

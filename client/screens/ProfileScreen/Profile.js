@@ -3,7 +3,7 @@ import * as RN from "react-native";
 import * as Paper from "react-native-paper";
 
 import { useDispatch, useSelector } from "react-redux";
-import { LOGOUT, RESET_ERROR_USER } from "../../actions";
+import { LOGOUT, RESET_ERROR_USER } from "../../redux/actions";
 import SnackBar from "../../components/SnackBar";
 import Spacing from "../../components/Spacing";
 import { useTheme } from "../../providers/theme.provider";

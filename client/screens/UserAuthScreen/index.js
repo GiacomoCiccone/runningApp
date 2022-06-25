@@ -11,7 +11,7 @@ import Tabs from "../../components/Tabs";
 import LoginScreen from "./LoginScreen";
 import RegisterScreen from "./RegisterScreen";
 import SnackBar from "../../components/SnackBar";
-import { RESET_ERROR_USER } from "../../actions";
+import { RESET_ERROR_USER } from "../../redux/actions";
 
 const UserAuthScreen = () => {
     const theme = useTheme();

@@ -1,4 +1,4 @@
-import axios from "../axios/";
+import axios from "../../axios";
 import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -22,7 +22,7 @@ import {
     STATISTICS_FAIL,
     STATISTICS_REQUEST,
     STATISTICS_SUCCESS,
-} from "./";
+} from ".";
 
 export const registerAction = (userInfo) => async (dispatch) => {
     //inizia la richiesta di registrazione
@@ -38,7 +38,7 @@ export const registerAction = (userInfo) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: REGISTER_FAIL,
-            payload: error.response?.data?.error || error.response._response,
+            payload: error.response?.data?.error || error.message
         });
     }
 };
@@ -59,7 +59,7 @@ export const loginAction = (email, password) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOGIN_FAIL,
-            payload: error.response?.data?.error || error.response._response,
+            payload: error.response?.data?.error || error.message
         });
     }
 };
@@ -80,7 +80,7 @@ export const forgotPasswordAction = (email, onSuccess) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: FORGOT_PASSWORD_FAIL,
-            payload: error.response?.data?.error || error.response._response,
+            payload: error.response?.data?.error || error.message
         });
     }
 };
@@ -103,7 +103,7 @@ export const resetPasswordAction =
             dispatch({
                 type: RESET_PASSWORD_FAIL,
                 payload:
-                    error.response?.data?.error || error.response._response,
+                    error.response?.data?.error || error.message
             });
         }
     };
@@ -139,7 +139,7 @@ export const updateAction = (userInfo, userId, token) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: UPDATE_FAIL,
-            payload: error.response.data.error,
+            payload: error.response?.data?.error || error.message,
         });
         return false;
     }
@@ -161,7 +161,7 @@ export const deleteAction = (userId, token) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: DELETE_FAIL,
-            payload: error.response.data.error,
+            payload: error.response?.data?.error || error.message,
         });
     }
 };
@@ -181,7 +181,6 @@ export const getStats = (userId, token) => async (dispatch) => {
         dispatch({ type: STATISTICS_SUCCESS, payload: { ...data.data } });
 
     } catch (error) {
-        console.log(error)
-        dispatch({ type: STATISTICS_FAIL, payload: error.response.data.error });
+        dispatch({ type: STATISTICS_FAIL, payload: error.response?.data?.error || error.message });
     }
 };

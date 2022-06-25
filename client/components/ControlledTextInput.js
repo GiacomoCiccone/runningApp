@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import TextInput from "./TextInput";
 
+//This component offers to a text input the functionalities of react use the form
 const ControlledTextInput = ({rules, label, name, error, control, ...props}) => {
     return (
         <Controller

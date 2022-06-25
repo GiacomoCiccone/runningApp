@@ -8,7 +8,7 @@ import { useTabIndex, useTabNavigation } from "react-native-paper-tabs";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
-import {registerAction} from '../../actions/userActions'
+import {registerAction} from '../../redux/actions/userActions'
 
 import Spacing from "../../components/Spacing";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";

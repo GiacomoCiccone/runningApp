@@ -1,12 +1,10 @@
 import * as React from "react";
 import * as RN from "react-native";
 import * as Paper from "react-native-paper";
-import * as Moti from "moti";
-import { useTheme } from "../../providers/theme.provider";
-import Spacing from "../../components/Spacing";
-import { FemaleGender, MaleGender, MeasureIllustration } from "../../assets/images";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import Picker from "../../components/Picker";
+import Spacing from "../../components/Spacing";
+import { useTheme } from "../../providers/theme.provider";
 
 const HeightScreen = ({ goNext, height, setHeight }) => {
     const theme = useTheme();
@@ -18,27 +16,19 @@ const HeightScreen = ({ goNext, height, setHeight }) => {
     return (
         <RN.View style={styles.container}>
             <Paper.Text
-                style={{
-                    fontSize: theme.fontSize["2xl"],
-                    color: theme.colors.primary,
-                    fontFamily: "Rubik-Bold",
-                    textAlign: "center",
-                }}
+                style={[
+                    styles.title,
+                    {
+                        fontSize: theme.fontSize["2xl"],
+                        color: theme.colors.primary,
+                    },
+                ]}
             >
                 Qual è la tua altezza?
             </Paper.Text>
 
             <Spacing horizontal size="3xl" />
-            <RN.View
-                style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    justifyContent: 'center'
-                }}
-            >
-
-
-
+            <RN.View style={styles.contentContainer}>
                 <RN.View style={styles.pickerContainer}>
                     <Picker
                         defaultValue={defaultValue}
@@ -60,10 +50,19 @@ const HeightScreen = ({ goNext, height, setHeight }) => {
 const styles = RN.StyleSheet.create({
     container: { flex: 1 },
     pickerContainer: { height: "100%" },
+    contentContainer: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "center",
+    },
     submitButtonWrapper: {
         justifyContent: "center",
         alignItems: "center",
         height: 150,
+    },
+    title: {
+        textAlign: "center",
+        fontFamily: "Rubik-Bold",
     },
 });
 

@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as RN from "react-native";
-import * as Paper from 'react-native-paper'
+import * as Paper from "react-native-paper";
 
 //redux
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 
 import Logo from "../../components/Logo";
 import { useTheme } from "../../providers/theme.provider";
@@ -12,16 +12,15 @@ import HeightScreen from "./HeightScreen";
 import ProgerssBar from "./ProgerssBar";
 import WeightScreen from "./WeightScreen";
 
-import { updateAction } from "../../actions/userActions";
 import SnackBar from "../../components/SnackBar";
-import { RESET_ERROR_USER } from "../../actions";
+import { RESET_ERROR_USER } from "../../redux/actions";
+import { updateAction } from "../../redux/actions/userActions";
 
 const CompleteRegistrationScreen = () => {
     const theme = useTheme();
 
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user)
-
+    const user = useSelector((state) => state.user);
     const [gender, setGender] = React.useState("male");
     const [weight, setWeight] = React.useState(70);
     const [height, setHeight] = React.useState(170);
@@ -53,7 +52,7 @@ const CompleteRegistrationScreen = () => {
     );
 
     const resetError = React.useCallback(() => {
-        setCurrentPage(0)
+        setCurrentPage(0);
         dispatch({ type: RESET_ERROR_USER });
     }, []);
 
@@ -66,22 +65,23 @@ const CompleteRegistrationScreen = () => {
     }, [currentPage, scrollViewLenght]);
 
     React.useEffect(() => {
-        if(currentPage > 2) {
+        if (currentPage > 2) {
             const body = {
                 gender,
                 weight,
-                height
-            }
-            dispatch(updateAction(body, user.userInfo._id,  user.authToken))
+                height,
+            };
+            dispatch(updateAction(body, user.userInfo._id, user.authToken));
         }
-    }, [currentPage])
+    }, [currentPage]);
 
     return (
         <RN.SafeAreaView style={styles.safeContainer}>
-            
             {currentPage <= 2 && <ProgerssBar currentPage={currentPage} />}
 
-            {currentPage > 2 && <Paper.ProgressBar indeterminate style={styles.progressBar} />}
+            {currentPage > 2 && (
+                <Paper.ProgressBar indeterminate style={styles.progressBar} />
+            )}
 
             <SnackBar
                 visible={user.error}
@@ -108,6 +108,7 @@ const CompleteRegistrationScreen = () => {
                     { marginHorizontal: theme.spacing.lg },
                 ]}
             >
+                {/* The various sub-screen are inside this flatlist */}
                 <RN.Animated.ScrollView
                     ref={scrollViewRef}
                     onScroll={onScrollHandler}
@@ -156,7 +157,7 @@ const styles = RN.StyleSheet.create({
         flex: 1,
     },
     progressBar: {
-        position: 'absolute'
+        position: "absolute",
     },
     logoContainer: {
         flex: 0.25,
@@ -170,7 +171,6 @@ const styles = RN.StyleSheet.create({
     tabsContainer: {
         flex: 0.8,
     },
-    
 });
 
 export default CompleteRegistrationScreen;
