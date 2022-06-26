@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, "Password richiesta"],
-            minlength: [true, "Password troppo breve"],
+            minlength: [8, "Password troppo breve"],
             //non vogliamo che la password sia mandata quando richiediamo un user
             select: false,
         },

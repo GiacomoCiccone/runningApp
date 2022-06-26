@@ -111,10 +111,6 @@ const MapScreen = () => {
             });
 
             await AsyncStorage.removeItem(TRACKING_SESSION_KEY);    //delete the entry in the storage
-        } else {
-            //else start the background update
-            await requestPermissions();
-            await startBackgroundUpdate();
         }
     };
 
@@ -145,15 +141,15 @@ const MapScreen = () => {
     //on first render show a modal before asking for the permissions, if not already granted
     React.useEffect(() => {
         (async () => {
-            try {
-                await requestPermissions();
-                await startBackgroundUpdate();
-            } catch (error) {
-                dispatch({
-                    type: RESET_TRACKING_SESSION,
-                });
+
+            const { status: permissionsForeground } = await Location.requestForegroundPermissionsAsync();
+            const { status: permissionsBackground } = await Location.requestBackgroundPermissionsAsync();
+
+            if(!permissionsBackground || !permissionsForeground) {
                 await stopBackgroundUpdate();
                 setShowPermissionModal(true);
+            } else {
+                await startBackgroundUpdate();
             }
         })();
     }, []);
