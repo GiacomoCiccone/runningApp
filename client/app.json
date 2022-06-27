@@ -8,8 +8,8 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#2F8DE5"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -38,9 +38,8 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "androidStatusBar": {
-      "hidden": true
+      "backgroundColor": "#2F8DE5"
     }
   }
 }

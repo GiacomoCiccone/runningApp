@@ -1,7 +1,7 @@
 import * as Font from "expo-font";
 import * as NavigationBar from "expo-navigation-bar";
 import * as React from "react";
-import { StatusBar, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import { useSelector } from "react-redux";
 import { DarkTheme, LightTheme } from "../common/theme";
 
@@ -52,16 +52,12 @@ export const ThemeProvider = ({ children }) => {
 
     React.useEffect(() => {
         const navigationBarButtonColor = theme.dark ? "light" : "dark";
-        const barStyle = theme.dark ? "light-content" : "dark-content";
 
         (async () => {
             await NavigationBar.setBackgroundColorAsync(
                 theme.colors.background
             );
             await NavigationBar.setButtonStyleAsync(navigationBarButtonColor);
-
-            StatusBar.setBarStyle(barStyle);
-            StatusBar.setBackgroundColor(theme.colors.background);
         })();
     }, [theme]);
 

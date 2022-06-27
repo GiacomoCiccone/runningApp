@@ -38,7 +38,6 @@ const History = ({ navigation }) => {
     }, []);
 
     const fetchHistory = React.useCallback(() => {
-        console.log(historyFinished);
         if (!historyFinished)
             dispatch(getHistory(userId, token, page, changePage));
     }, [userId, token, page, historyFinished]);

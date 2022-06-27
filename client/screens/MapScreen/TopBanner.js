@@ -1,6 +1,6 @@
+import * as Moti from "moti";
 import * as React from "react";
 import * as RN from "react-native";
-import * as Moti from "moti";
 import * as Paper from "react-native-paper";
 
 //redux
@@ -10,10 +10,9 @@ import { useTheme } from "../../providers/theme.provider";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import TopBannerTextNormal from "./TopBannerTextNormal";
-import TopBannerTextBig from "./TopBannerTextBig";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TopBannerModal from "./TopBannerModal";
+import TopBannerTextBig from "./TopBannerTextBig";
+import TopBannerTextNormal from "./TopBannerTextNormal";
 
 const HEIGHT_CONTAINER_1 = 200;
 const HEIGHT_CONTAINER_1_BIG_TEXT = 100;
@@ -58,6 +57,8 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
     const [selectedLeft, setSelectedLeft] = React.useState("calories");
     const [selectedCenter, setSelectedCenter] = React.useState("time");
     const [selectedRight, setSelectedRight] = React.useState("distance");
+    const [showWeatherDescription, setShowWeatherDescription] =
+        React.useState(false);
     const [modalState, modalDispath] = React.useReducer(
         modalReducer,
         modalInitialState
@@ -176,32 +177,76 @@ const TopBanner = ({ fullSize, setFullSize, isGPSEnabled }) => {
                             style={{ flex: 1, marginLeft: theme.spacing.xl }}
                         >
                             {weather && (
-                                <RN.View
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                    }}
+                                <RN.TouchableWithoutFeedback
+                                    onPress={() =>
+                                        setShowWeatherDescription(
+                                            (current) => !current
+                                        )
+                                    }
                                 >
-                                    <RN.Image
-                                        source={{
-                                            uri: `http://openweathermap.org/img/wn/${weather.icon}@2x.png`,
-                                        }}
+                                    <RN.View
                                         style={{
-                                            width: 30,
-                                            height: 30,
-                                            resizeMode: "contain",
-                                        }}
-                                    />
-                                    <Paper.Text
-                                        style={{
-                                            fontSize: theme.fontSize.xs,
-                                            fontFamily: "Rubik-Medium",
+                                            flex: 1,
+                                            flexDirection: "row",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        {weather.temp}°
-                                    </Paper.Text>
-                                </RN.View>
+                                        <RN.Image
+                                            source={{
+                                                uri: `http://openweathermap.org/img/wn/${weather.icon}@2x.png`,
+                                            }}
+                                            style={{
+                                                width: 30,
+                                                height: 30,
+                                                resizeMode: "contain",
+                                            }}
+                                        />
+                                        <Paper.Text
+                                            style={{
+                                                fontSize: theme.fontSize.xs,
+                                                fontFamily: "Rubik-Medium",
+                                            }}
+                                        >
+                                            {weather.temp}°
+                                        </Paper.Text>
+                                        <Moti.AnimatePresence>
+                                            {showWeatherDescription && (
+                                                <Moti.MotiView
+                                                    from={{
+                                                        translateX: -10,
+                                                        opacity: 0,
+                                                    }}
+                                                    animate={{
+                                                        translateX: 0,
+                                                        opacity: 1,
+                                                    }}
+                                                    transition={{
+                                                        type: "timing",
+                                                    }}
+                                                    exit={{ opacity: 0 }}
+                                                    exitTransition={{
+                                                        type: "timing",
+                                                    }}
+                                                    style={{
+                                                        zIndex: 100,
+                                                        padding:
+                                                            theme.spacing.sm,
+                                                    }}
+                                                >
+                                                    <Paper.Text
+                                                        style={{
+                                                            fontSize:
+                                                                theme.fontSize
+                                                                    .xs,
+                                                        }}
+                                                    >
+                                                        {weather.description}
+                                                    </Paper.Text>
+                                                </Moti.MotiView>
+                                            )}
+                                        </Moti.AnimatePresence>
+                                    </RN.View>
+                                </RN.TouchableWithoutFeedback>
                             )}
                         </RN.View>
 

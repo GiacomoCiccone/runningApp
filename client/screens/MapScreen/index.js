@@ -9,17 +9,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage/";
 import axios from "axios";
 import SnackBar from "../../components/SnackBar";
 import {
-    LOCATION_ERROR, REHYDRATE_SESSION_FROM_STORAGE, RESET_LOCATION_ERROR, RESET_TRACKING_SESSION, UPDATE_TRACKING_INFO
+    LOCATION_ERROR, REHYDRATE_SESSION_FROM_STORAGE, RESET_LOCATION_ERROR, UPDATE_TRACKING_INFO
 } from "../../redux/actions";
 import { sendTrackingInfo } from "../../redux/actions/trackingSessionActions";
 import { store } from "../../redux/store";
-import { WHEATER_API_KEY } from "../../utils/.env";
+import { WHEATER_API_KEY, TRACKING_SESSION_KEY } from "../../utils/constants";
 import BottomBanner from "./BottomBanner";
 import {
     requestPermissions,
     startBackgroundUpdate,
     stopBackgroundUpdate,
-    TRACKING_SESSION_KEY
+    
 } from "./locationFunctions";
 import Map from "./Map";
 import ModalSummary from "./ModalSummary";
@@ -77,7 +77,7 @@ const MapScreen = () => {
             const body = {
                 ...info,
                 history: info.history.map((subHistory) =>
-                    subHistory.map((loc) => {
+                    subHistory?.map((loc) => {
                         return {
                             latitude: loc.latitude,
                             longitude: loc.longitude,
@@ -111,6 +111,12 @@ const MapScreen = () => {
             });
 
             await AsyncStorage.removeItem(TRACKING_SESSION_KEY);    //delete the entry in the storage
+        }  else {
+            const { granted: permissionsForeground } = await Location.getForegroundPermissionsAsync();
+            const { granted: permissionsBackground } = await Location.getBackgroundPermissionsAsync();
+
+            if(permissionsForeground && permissionsBackground)
+                await startBackgroundUpdate();
         }
     };
 
@@ -141,9 +147,8 @@ const MapScreen = () => {
     //on first render show a modal before asking for the permissions, if not already granted
     React.useEffect(() => {
         (async () => {
-
-            const { status: permissionsForeground } = await Location.requestForegroundPermissionsAsync();
-            const { status: permissionsBackground } = await Location.requestBackgroundPermissionsAsync();
+            const { granted: permissionsForeground } = await Location.getForegroundPermissionsAsync();
+            const { granted: permissionsBackground } = await Location.getBackgroundPermissionsAsync();
 
             if(!permissionsBackground || !permissionsForeground) {
                 await stopBackgroundUpdate();
@@ -230,14 +235,15 @@ const MapScreen = () => {
                     store.getState().trackingSession.currentLocation;
                 if (currentLocation) {
                     const { data } = await axios.get(
-                        `https://api.openweathermap.org/data/2.5/weather?lat=${currentLocation.latitude}&lon=${currentLocation.longitude}&appid=${WHEATER_API_KEY}&units=metric`
+                        `https://api.openweathermap.org/data/2.5/weather?lat=${currentLocation.latitude}&lon=${currentLocation.longitude}&appid=${WHEATER_API_KEY}&units=metric&lang=it`
                     );
                     const { temp } = data.main;
-                    const { icon } = data.weather[0];
+                    const { icon, description } = data.weather[0];
                     const payload = {
                         weather: {
                             temp,
                             icon,
+                            description: description.charAt(0).toUpperCase() + description.slice(1)
                         },
                     };
                     dispatch({ type: UPDATE_TRACKING_INFO, payload });

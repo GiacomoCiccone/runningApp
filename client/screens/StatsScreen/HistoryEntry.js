@@ -24,6 +24,7 @@ const HistoryEntry = ({ navigation, route }) => {
         setMapReady(true);
         let coordinates = [];
         trackingSession.history.forEach((subHistory) => {
+            if(!subHistory) return
             coordinates = [...coordinates, ...subHistory];
         });
         mapRef.current.fitToCoordinates(coordinates, {
@@ -36,7 +37,7 @@ const HistoryEntry = ({ navigation, route }) => {
     return (
         <RN.SafeAreaView style={styles.safeContainer}>
             <AppHeader
-                title={`Corsa del ${new Date(
+                title={`Attività del ${new Date(
                     trackingSession.startDate
                 ).toLocaleDateString("it-IT")}`}
             />
