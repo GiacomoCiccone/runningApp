@@ -84,7 +84,7 @@ const MapScreen = () => {
                         };
                     })
                 ),
-                user: userId,
+                user: userId,   //add the user id to link the session and the user in the database
             };
 
             dispatch(sendTrackingInfo(body));   //send to backend

@@ -6,7 +6,7 @@ const UsersRecordsSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        _maxDistance: {
+        _maxDistance: { // underscore to avoid name conflicts with mongoose
             type: Number,
             default: 0,
         },

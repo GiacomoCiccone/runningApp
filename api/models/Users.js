@@ -18,8 +18,7 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: [true, "Password richiesta"],
             minlength: [8, "Password troppo breve"],
-            //non vogliamo che la password sia mandata quando richiediamo un user
-            select: false,
+            select: false, //non vogliamo che la password sia mandata quando richiediamo un user
         },
         fullName: {
             type: String,
@@ -72,7 +71,7 @@ UserSchema.methods.getSignedToken = function () {
 };
 
 UserSchema.methods.getResetPasswordToken = function () {
-    const resetToken = crypto.randomInt(0, 9999).toString().padStart(4, "0")
+    const resetToken = crypto.randomInt(0, 9999).toString().padStart(4, "0")    //genera una cifra casuale nel formato xxxx
 
     //setta il campo resetPasswordToken di questo utente
     this.resetPasswordToken = crypto

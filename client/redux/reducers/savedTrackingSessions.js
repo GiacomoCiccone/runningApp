@@ -1,7 +1,7 @@
 import { ADD_TRACKING_SESSION, REMOVE_TRACKING_SESSION } from "../actions";
 
 const initialState = {
-    saved: []
+    saved: []   //array of sessions to be sent
 };
 
 export default function savedTrackingSessionReducer(state = initialState, action) {

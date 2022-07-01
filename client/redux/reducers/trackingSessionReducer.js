@@ -14,20 +14,20 @@ const initialState = {
     averageSpeed: 0,
     speed: 0,
     maxSpeed: 0,
-    altitude: 0,
-    calories: 0,
+    altitude: 0,    //altitude above sea level
+    calories: 0,    //calories burned
     distance: 0,
     pace: 0,
     averagePace: 0,
     weather: null,
     heading: 0,
-    time: 0,
+    time: 0,        //timer for the session in milliseconds
     history: [],
     startDate: null,
     endDate: null,
     trackingActive: false,
     error: null,
-    numOfPauses: 0,
+    numOfPauses: 0,     //this field is necessary to display broken polylines
 };
 
 export default function trackingSessionReducer(state = initialState, action) {

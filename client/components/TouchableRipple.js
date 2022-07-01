@@ -3,7 +3,7 @@ import * as Paper from "react-native-paper";
 
 import { useTheme } from "../providers/theme.provider";
 
-// Custom button with ripple effect
+// Custom button with ripple effect similar to the one in the twitch.tv app
 const TouchableRipple = ({ rippleColor, left, right, children, ...props }) => {
     const theme = useTheme()
 
